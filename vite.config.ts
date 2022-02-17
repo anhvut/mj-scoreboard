@@ -7,5 +7,6 @@ export default defineConfig({
   plugins: [vue(), VitePWA()],
   server: {
     port: 9000
-  }
+  },
+  base: './'
 })
