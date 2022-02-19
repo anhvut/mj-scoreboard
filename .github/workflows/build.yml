@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, deploy ]
   pull_request:
     branches: [ main ]
   # Allows you to run this workflow manually from the Actions tab
@@ -12,7 +12,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -37,5 +36,41 @@ jobs:
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2.3.1
         with:
-          name: mj-scoreboard_${{ github.sha }}
+          name: mj-scoreboard
           path: ./dist
+
+  deploy:
+    needs: build
+    if: ${{ github.ref_name == 'deploy' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: mj-scoreboard
+
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }} 
+          name: id_github-actions
+          known_hosts: placeholder
+          config: |
+            Host github.com 
+            HostName ssh.github.com 
+            User git
+            port 443
+            IdentityFile ~/.ssh/id_github-actions
+
+      - name: Adding Known Hosts
+        run: ssh-keyscan -H ssh.github.com > ~/.ssh/known_hosts
+
+      - name: Send to gh-pages
+        run: |
+          git init
+          git config user.name "Anh-Vu Tran"
+          git config user.email "anhvutran1@gmail.com"
+          git branch -m main
+          git add -A
+          git commit -m 'deploy'
+          git push -f git@github.com:anhvut/mj-scoreboard.git main:gh-pages
