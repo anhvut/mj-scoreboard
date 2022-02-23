@@ -8,5 +8,6 @@ export default defineConfig({
   server: {
     port: 9000
   },
-  base: './'
+  base: './',
+  define: { __VUE_OPTIONS_API__: false}
 })

@@ -1,23 +1,14 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import ScoreBoard from './components/ScoreBoard.vue'
 </script>
 
 <template>
-  <img alt="Vue logo" src="./assets/banner.jpg" />
-  <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
+  <div style="width: 978px; margin-left: auto; margin-right: auto">
+    <img alt="Vue logo" src="./assets/banner.jpg" style='margin-bottom: 8px'/>
+    <ScoreBoard />
+  </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-table {
-  margin-left: auto;
-  margin-right: auto;
-}
+<style lang='scss'>
+@import './theme.scss';
 </style>
