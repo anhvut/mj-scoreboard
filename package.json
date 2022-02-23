@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "postinstall": "bash patch/vue-material-adapter_types_index.d.ts.sh"
   },
   "dependencies": {
     "@material/animation": "^10.0.0",

@@ -4,3 +4,4 @@ cat <<EOF | patch -f -r /dev/null node_modules/vue-material-adapter/types/index.
 ---
 >   setScrollTarget(vm: any): void;
 EOF
+exit 0
