@@ -3,6 +3,7 @@ import {t} from '../i18n'
 import {computed, reactive, ref} from 'vue'
 import type {PlayerNumbers, PlayerPoint, Round} from '../types'
 import ScoreRow from './ScoreRow.vue'
+import {getStore} from '../store'
 
 const points = ref<string>('')
 const player1 = ref<string>('')
@@ -56,28 +57,31 @@ function addRound() {
   winner.value = ''
   giver.value = ''
 }
+
+const store = getStore()
+const nameCellClass = computed(() => `mdc-layout-grid__cell--span-${store.getters.layoutNum + 1}`)
 </script>
 
 <template>
   <div class="mdc-typography--headline4">{{ t('app.title') }}</div>
   <mcw-layout-grid class='inputNameContainer'>
-    <mcw-layout-cell class="mdc-layout-grid__cell--span-1">
+    <mcw-layout-cell :class="nameCellClass">
       <mcw-textfield v-model="player1" :label="t('p.Name') + ' ' + t('dir.east')" type="text" autofocus class="inputName" />
     </mcw-layout-cell>
-    <mcw-layout-cell class="mdc-layout-grid__cell--span-1">
+    <mcw-layout-cell :class="nameCellClass">
       <mcw-textfield v-model="player2" :label="t('p.Name') + ' ' + t('dir.south')" type="text" class="inputName" />
     </mcw-layout-cell>
-    <mcw-layout-cell class="mdc-layout-grid__cell--span-1">
+    <mcw-layout-cell :class="nameCellClass">
       <mcw-textfield v-model="player3" :label="t('p.Name') + ' ' + t('dir.west')" type="text" class="inputName" />
     </mcw-layout-cell>
-    <mcw-layout-cell class="mdc-layout-grid__cell--span-1">
+    <mcw-layout-cell :class="nameCellClass">
       <mcw-textfield v-model="player4" :label="t('p.Name') + ' ' + t('dir.north')" type="text" class="inputName" />
     </mcw-layout-cell>
   </mcw-layout-grid>
 
   <div v-if="playersDefined" class='inputWinnerContainer'>
     <mcw-textfield v-model="points" :label="t('r.Points')" type="number" class='inputPoint'/>
-    <mcw-select v-model="winner" :label="t('r.Winner')" class='selectWinner'>
+    <mcw-select v-model="winner" :label="t('r.Winner')" class='selectPlayer'>
       <mcw-list-item data-value="" tabindex="0" style='display: none; height: 0 !important'></mcw-list-item>
       <mcw-list-item data-value="0">{{ player1 }}</mcw-list-item>
       <mcw-list-item data-value="1">{{ player2 }}</mcw-list-item>
@@ -85,7 +89,7 @@ function addRound() {
       <mcw-list-item data-value="3">{{ player4 }}</mcw-list-item>
       <mcw-list-item data-value="4">{{ t('r.draw') }}</mcw-list-item>
     </mcw-select>
-    <mcw-select v-model="giver" :label="t('r.Giver')" class='selectGiver'>
+    <mcw-select v-model="giver" :label="t('r.Giver')" class='selectPlayer'>
       <mcw-list-item data-value="" tabindex="0" style='display: none; height: 0 !important'></mcw-list-item>
       <mcw-list-item data-value="0">{{ player1 }}</mcw-list-item>
       <mcw-list-item data-value="1">{{ player2 }}</mcw-list-item>
@@ -97,7 +101,7 @@ function addRound() {
   </div>
 
   <mcw-data-table v-if="playersDefined">
-    <table class="mdc-data-table__table" aria-label="Dessert calories">
+    <table class="mdc-data-table__table">
       <thead>
         <tr class="mdc-data-table__header-row">
           <th class="mdc-data-table__header-cell" role="columnheader" scope="col">{{ t('r.Round') }}</th>
@@ -144,16 +148,32 @@ function addRound() {
 .inputWinnerContainer {
   margin-bottom: 16px;
   display: block;
+}
+
+.mobile .inputWinnerContainer {
   margin-left: var(--mdc-layout-grid-margin-phone);
+}
+
+.tablet .inputWinnerContainer {
+  margin-left: var(--mdc-layout-grid-margin-tablet);
+}
+
+.desktop .inputWinnerContainer {
+  margin-left: var(--mdc-layout-grid-margin-desktop);
 }
 
 .inputWinnerContainer > * {
   display: inline-block;
-  margin-bottom: 16px;
 }
 
-.inputWinnerContainer > *:not(:last-child) {
+.mobile .inputWinnerContainer > *:not(:last-child) {
   margin-right: var(--mdc-layout-grid-gutter-phone);
+}
+.tablet .inputWinnerContainer > *:not(:last-child) {
+  margin-right: var(--mdc-layout-grid-gutter-tablet);
+}
+.desktop .inputWinnerContainer > *:not(:last-child) {
+  margin-right: var(--mdc-layout-grid-gutter-desktop);
 }
 
 .inputWinnerContainer .mdc-select > .mdc-select__anchor > .mdc-select__dropdown-icon {
@@ -177,11 +197,7 @@ function addRound() {
   -moz-appearance: textfield;
 }
 
-.selectWinner > .mdc-select__anchor {
-  width: 128px;
-}
-
-.selectGiver {
+.mobile .selectPlayer {
   width: 128px;
 }
 

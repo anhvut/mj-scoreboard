@@ -60,7 +60,8 @@
     "vue": "^3.2.31",
     "vue-i18n": "^9.1.9",
     "vue-material-adapter": "^3.2.3",
-    "vue-router": "^4.0.12"
+    "vue-router": "^4.0.12",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.2.0",
