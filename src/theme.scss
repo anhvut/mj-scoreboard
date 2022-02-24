@@ -48,5 +48,9 @@
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --mdc-layout-grid-margin-phone: 4px;
+  --mdc-layout-grid-gutter-phone: 8px;
+
 }
 

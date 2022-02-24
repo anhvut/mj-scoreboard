@@ -4,7 +4,7 @@ export const messages = {
   en: {
     'app.title': 'Mahjong scoreboard calculator',
     'r.AddRound': 'Add round',
-    'r.Points': 'Points',
+    'r.Points': 'Pts',
     'r.Winner': 'Winner',
     'r.Giver': 'Giver',
     'r.on': 'on',
@@ -13,6 +13,7 @@ export const messages = {
     'r.Round': 'Round',
     'r.SelectWinner': 'Select winner',
     'r.SelectGiver': 'Select giver',
+    'p.Name': 'Name',
     'p.PlayerNames': 'Player names',
     'p.Player': 'Player',
     'p.player': 'player',
@@ -26,7 +27,7 @@ export const messages = {
   fr: {
     'app.title': 'Calculateur de table de score Mahjong',
     'r.AddRound': 'Ajouter manche',
-    'r.Points': 'Points',
+    'r.Points': 'Pts',
     'r.Winner': 'Gagnant',
     'r.Giver': 'Donneur',
     'r.on': 'sur',
@@ -35,6 +36,7 @@ export const messages = {
     'r.Round': 'Manche',
     'r.SelectWinner': 'Choisir gagnant',
     'r.SelectGiver': 'Choisir donneur',
+    'p.Name': 'Nom',
     'p.PlayerNames': 'Noms des joueurs',
     'p.Player': 'Joueur',
     'p.player': 'joueur',

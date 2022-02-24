@@ -59,48 +59,42 @@ function addRound() {
 </script>
 
 <template>
-  <div class="mdc-typography--headline3">{{ t('app.title') }}</div>
-  <mcw-layout-grid>
-    <mcw-layout-cell class="mdc-layout-grid__cell--span-3">
-      <mcw-textfield v-model="player1" :label="t('p.Player') + ' ' + t('dir.east')" type="text" autofocus />
+  <div class="mdc-typography--headline4">{{ t('app.title') }}</div>
+  <mcw-layout-grid class='inputNameContainer'>
+    <mcw-layout-cell class="mdc-layout-grid__cell--span-1">
+      <mcw-textfield v-model="player1" :label="t('p.Name') + ' ' + t('dir.east')" type="text" autofocus class="inputName" />
     </mcw-layout-cell>
-    <mcw-layout-cell class="mdc-layout-grid__cell--span-3">
-      <mcw-textfield v-model="player2" :label="t('p.Player') + ' ' + t('dir.south')" type="text" />
+    <mcw-layout-cell class="mdc-layout-grid__cell--span-1">
+      <mcw-textfield v-model="player2" :label="t('p.Name') + ' ' + t('dir.south')" type="text" class="inputName" />
     </mcw-layout-cell>
-    <mcw-layout-cell class="mdc-layout-grid__cell--span-3">
-      <mcw-textfield v-model="player3" :label="t('p.Player') + ' ' + t('dir.west')" type="text" />
+    <mcw-layout-cell class="mdc-layout-grid__cell--span-1">
+      <mcw-textfield v-model="player3" :label="t('p.Name') + ' ' + t('dir.west')" type="text" class="inputName" />
     </mcw-layout-cell>
-    <mcw-layout-cell class="mdc-layout-grid__cell--span-3">
-      <mcw-textfield v-model="player4" :label="t('p.Player') + ' ' + t('dir.north')" type="text" />
+    <mcw-layout-cell class="mdc-layout-grid__cell--span-1">
+      <mcw-textfield v-model="player4" :label="t('p.Name') + ' ' + t('dir.north')" type="text" class="inputName" />
     </mcw-layout-cell>
   </mcw-layout-grid>
 
-  <mcw-layout-grid v-if="playersDefined">
-    <mcw-layout-cell class="mdc-layout-grid__cell--span-3">
-      <mcw-textfield v-model="points" :label="t('r.Points')" type="number" />
-    </mcw-layout-cell>
-    <mcw-layout-cell class="mdc-layout-grid__cell--span-3">
-      <mcw-select v-model="winner" :label="t('r.Winner')" class="mdc-select">
-        <mcw-list-item data-value="0" tabindex="0">{{ player1 }}</mcw-list-item>
-        <mcw-list-item data-value="1">{{ player2 }}</mcw-list-item>
-        <mcw-list-item data-value="2">{{ player3 }}</mcw-list-item>
-        <mcw-list-item data-value="3">{{ player4 }}</mcw-list-item>
-        <mcw-list-item data-value="4">{{ t('r.draw') }}</mcw-list-item>
-      </mcw-select>
-    </mcw-layout-cell>
-    <mcw-layout-cell class="mdc-layout-grid__cell--span-3">
-      <mcw-select v-model="giver" :label="t('r.Giver')">
-        <mcw-list-item data-value="0" role="option" tabindex="0">{{ player1 }}</mcw-list-item>
-        <mcw-list-item data-value="1" role="option">{{ player2 }}</mcw-list-item>
-        <mcw-list-item data-value="2" role="option">{{ player3 }}</mcw-list-item>
-        <mcw-list-item data-value="3" role="option">{{ player4 }}</mcw-list-item>
-        <mcw-list-item data-value="4" role="option">{{ t('r.self') }}</mcw-list-item>
-      </mcw-select>
-    </mcw-layout-cell>
-    <mcw-layout-cell class="mdc-layout-grid__cell--span-3">
-      <mcw-fab v-if="canAddRound" @click="addRound" icon="add" />
-    </mcw-layout-cell>
-  </mcw-layout-grid>
+  <div v-if="playersDefined" class='inputWinnerContainer'>
+    <mcw-textfield v-model="points" :label="t('r.Points')" type="number" class='inputPoint'/>
+    <mcw-select v-model="winner" :label="t('r.Winner')" class='selectWinner'>
+      <mcw-list-item data-value="" tabindex="0" style='display: none; height: 0 !important'></mcw-list-item>
+      <mcw-list-item data-value="0">{{ player1 }}</mcw-list-item>
+      <mcw-list-item data-value="1">{{ player2 }}</mcw-list-item>
+      <mcw-list-item data-value="2">{{ player3 }}</mcw-list-item>
+      <mcw-list-item data-value="3">{{ player4 }}</mcw-list-item>
+      <mcw-list-item data-value="4">{{ t('r.draw') }}</mcw-list-item>
+    </mcw-select>
+    <mcw-select v-model="giver" :label="t('r.Giver')" class='selectGiver'>
+      <mcw-list-item data-value="" tabindex="0" style='display: none; height: 0 !important'></mcw-list-item>
+      <mcw-list-item data-value="0">{{ player1 }}</mcw-list-item>
+      <mcw-list-item data-value="1">{{ player2 }}</mcw-list-item>
+      <mcw-list-item data-value="2">{{ player3 }}</mcw-list-item>
+      <mcw-list-item data-value="3">{{ player4 }}</mcw-list-item>
+      <mcw-list-item data-value="4">{{ t('r.self') }}</mcw-list-item>
+    </mcw-select>
+    <mcw-fab mini v-if="canAddRound" @click="addRound" icon="add" />
+  </div>
 
   <mcw-data-table v-if="playersDefined">
     <table class="mdc-data-table__table" aria-label="Dessert calories">
@@ -138,13 +132,60 @@ function addRound() {
 </tr-->
 </template>
 
-<style lang="scss" scoped>
-table {
-  margin-top: 1em;
-  margin-bottom: 1em;
+<style lang="scss">
+
+.inputName {
 }
 
-.full-width {
-  width: 100%;
+.inputNameContainer {
+  margin-bottom: 16px;
+}
+
+.inputWinnerContainer {
+  margin-bottom: 16px;
+  display: block;
+  margin-left: var(--mdc-layout-grid-margin-phone);
+}
+
+.inputWinnerContainer > * {
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
+.inputWinnerContainer > *:not(:last-child) {
+  margin-right: var(--mdc-layout-grid-gutter-phone);
+}
+
+.inputWinnerContainer .mdc-select > .mdc-select__anchor > .mdc-select__dropdown-icon {
+  width: 0;
+}
+.inputWinnerContainer .mdc-select--filled .mdc-floating-label--float-above {
+  max-width: unset;
+}
+
+.inputPoint {
+  width: 58px;
+}
+
+/* deactivate spinner Chrome, Safari, Edge, Opera */
+.inputPoint input::-webkit-outer-spin-button, .inputPoint input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* deactivate spinner Firefox */
+.inputPoint input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.selectWinner > .mdc-select__anchor {
+  width: 128px;
+}
+
+.selectGiver {
+  width: 128px;
+}
+
+.inputWinnerContainer .mdc-menu > .mdc-list > .mdc-list-item[data-value=""] {
+  display: none;
 }
 </style>
