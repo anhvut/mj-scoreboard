@@ -9,5 +9,10 @@ export default defineConfig({
     port: 9000
   },
   base: './',
-  define: { __VUE_OPTIONS_API__: false}
+  define: {
+    __VUE_I18N_FULL_INSTALL__: false,
+    __VUE_I18N_LEGACY_API__: false,
+    __VUE_I18N_PROD_DEVTOOLS__: false,
+    __VUE_OPTIONS_API__: false
+  }
 })
