@@ -16,6 +16,8 @@ const playersDefined = computed<boolean>(() => players.value.every((player) => p
 const winner = ref<string>('')
 const giver = ref<string>('')
 
+const pointInputRef = ref<HTMLInputElement | null>(null)
+
 const rounds = reactive<Round[]>([])
 const playerPoints = computed<PlayerPoint[]>(() => {
   const result: PlayerPoint[] = []
@@ -56,6 +58,7 @@ function addRound() {
   points.value = ''
   winner.value = ''
   giver.value = ''
+  if (pointInputRef.value) pointInputRef.value.focus()
 }
 
 const store = getStore()
@@ -144,7 +147,8 @@ const selectPlayerStyle = computed(() =>
   </mcw-data-table>
 
   <div v-if="playersDefined" class="inputWinnerContainer">
-    <mcw-textfield v-model="points" :label="t('r.Points')" type="number" class="inputPoint" />
+    <!--suppress JSUndeclaredVariable -->
+    <mcw-textfield v-model="points" :label="t('r.Points')" type="number" class="inputPoint" :ref="(el) => (pointInputRef = el)" />
     <mcw-select v-model="winner" :label="t('r.Winner')" class="selectPlayer" :style="selectPlayerStyle">
       <mcw-list-item data-value="" tabindex="0" style="display: none; height: 0 !important"></mcw-list-item>
       <mcw-list-item data-value="0">{{ player1 }}</mcw-list-item>
