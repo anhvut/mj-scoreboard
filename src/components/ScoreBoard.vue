@@ -87,28 +87,7 @@ const selectPlayerStyle = computed(() =>
     </mcw-layout-cell>
   </mcw-layout-grid>
 
-  <div v-if="playersDefined" class="inputWinnerContainer">
-    <mcw-textfield v-model="points" :label="t('r.Points')" type="number" class="inputPoint" />
-    <mcw-select v-model="winner" :label="t('r.Winner')" class="selectPlayer" :style="selectPlayerStyle">
-      <mcw-list-item data-value="" tabindex="0" style="display: none; height: 0 !important"></mcw-list-item>
-      <mcw-list-item data-value="0">{{ player1 }}</mcw-list-item>
-      <mcw-list-item data-value="1">{{ player2 }}</mcw-list-item>
-      <mcw-list-item data-value="2">{{ player3 }}</mcw-list-item>
-      <mcw-list-item data-value="3">{{ player4 }}</mcw-list-item>
-      <mcw-list-item data-value="4">{{ t('r.draw') }}</mcw-list-item>
-    </mcw-select>
-    <mcw-select v-model="giver" :label="t('r.Giver')" class="selectPlayer" :style="selectPlayerStyle">
-      <mcw-list-item data-value="" tabindex="0" style="display: none; height: 0 !important"></mcw-list-item>
-      <mcw-list-item data-value="0">{{ player1 }}</mcw-list-item>
-      <mcw-list-item data-value="1">{{ player2 }}</mcw-list-item>
-      <mcw-list-item data-value="2">{{ player3 }}</mcw-list-item>
-      <mcw-list-item data-value="3">{{ player4 }}</mcw-list-item>
-      <mcw-list-item data-value="4">{{ t('r.self') }}</mcw-list-item>
-    </mcw-select>
-    <mcw-fab mini v-if="canAddRound" @click="addRound" icon="add" />
-  </div>
-
-  <mcw-data-table v-if="playersDefined">
+  <mcw-data-table v-if="playersDefined" class="pointTableContainer">
     <table class="mdc-data-table__table">
       <thead>
         <tr class="mdc-data-table__header-row">
@@ -163,6 +142,27 @@ const selectPlayerStyle = computed(() =>
       </tbody>
     </table>
   </mcw-data-table>
+
+  <div v-if="playersDefined" class="inputWinnerContainer">
+    <mcw-textfield v-model="points" :label="t('r.Points')" type="number" class="inputPoint" />
+    <mcw-select v-model="winner" :label="t('r.Winner')" class="selectPlayer" :style="selectPlayerStyle">
+      <mcw-list-item data-value="" tabindex="0" style="display: none; height: 0 !important"></mcw-list-item>
+      <mcw-list-item data-value="0">{{ player1 }}</mcw-list-item>
+      <mcw-list-item data-value="1">{{ player2 }}</mcw-list-item>
+      <mcw-list-item data-value="2">{{ player3 }}</mcw-list-item>
+      <mcw-list-item data-value="3">{{ player4 }}</mcw-list-item>
+      <mcw-list-item data-value="4">{{ t('r.draw') }}</mcw-list-item>
+    </mcw-select>
+    <mcw-select v-model="giver" :label="t('r.Giver')" class="selectPlayer" :style="selectPlayerStyle">
+      <mcw-list-item data-value="" tabindex="0" style="display: none; height: 0 !important"></mcw-list-item>
+      <mcw-list-item data-value="0">{{ player1 }}</mcw-list-item>
+      <mcw-list-item data-value="1">{{ player2 }}</mcw-list-item>
+      <mcw-list-item data-value="2">{{ player3 }}</mcw-list-item>
+      <mcw-list-item data-value="3">{{ player4 }}</mcw-list-item>
+      <mcw-list-item data-value="4">{{ t('r.self') }}</mcw-list-item>
+    </mcw-select>
+    <mcw-fab mini v-if="canAddRound" @click="addRound" icon="add" />
+  </div>
 </template>
 
 <style lang="scss">
@@ -228,5 +228,21 @@ const selectPlayerStyle = computed(() =>
 
 .inputWinnerContainer .mdc-menu > .mdc-list > .mdc-list-item[data-value=''] {
   display: none;
+}
+
+.pointTableContainer {
+  margin-bottom: 16px;
+}
+
+.mobile .pointTableContainer {
+  margin-left: var(--mdc-layout-grid-margin-phone);
+}
+
+.tablet .pointTableContainer {
+  margin-left: var(--mdc-layout-grid-margin-tablet);
+}
+
+.desktop .pointTableContainer {
+  margin-left: var(--mdc-layout-grid-margin-desktop);
 }
 </style>
