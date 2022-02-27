@@ -128,20 +128,41 @@ const selectPlayerStyle = computed(() =>
         </tr>
       </thead>
       <tbody class="mdc-data-table__content">
-        <template v-for="(roundPoints, index) in playerPoints" :key="index">
+        <tr>
+          <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
+            <img alt="east" src="../assets/east.png" />
+          </td>
+        </tr>
+        <template v-for="(roundPoints, index) in playerPoints.slice(0, 4)" :key="index">
           <ScoreRow :roundPoints="roundPoints" :round-definition="rounds[index]" :players="players" :roundIndex="index" />
+        </template>
+        <tr v-if="playerPoints.length >= 4">
+          <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
+            <img alt="east" src="../assets/south.png" />
+          </td>
+        </tr>
+        <template v-for="(roundPoints, index) in playerPoints.slice(4, 8)" :key="index">
+          <ScoreRow :roundPoints="roundPoints" :round-definition="rounds[index]" :players="players" :roundIndex="index + 4" />
+        </template>
+        <tr v-if="playerPoints.length >= 8">
+          <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
+            <img alt="east" src="../assets/west.png" />
+          </td>
+        </tr>
+        <template v-for="(roundPoints, index) in playerPoints.slice(8, 12)" :key="index">
+          <ScoreRow :roundPoints="roundPoints" :round-definition="rounds[index]" :players="players" :roundIndex="index + 8" />
+        </template>
+        <tr v-if="playerPoints.length >= 12">
+          <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
+            <img alt="east" src="../assets/north.png" />
+          </td>
+        </tr>
+        <template v-for="(roundPoints, index) in playerPoints.slice(12, 16)" :key="index">
+          <ScoreRow :roundPoints="roundPoints" :round-definition="rounds[index]" :players="players" :roundIndex="index + 12" />
         </template>
       </tbody>
     </table>
   </mcw-data-table>
-
-  <!--tr>
-  <td class="mdl-data-table__cell--non-numeric"></td>
-  <td class="center"><img alt="east" src="../assets/east.png"/></td>
-  <td class="center"><img alt="south" src="../assets/south.png"/></td>
-  <td class="center"><img alt="west" src="../assets/west.png"/></td>
-  <td class="center"><img alt="north" src="../assets/north.png"/></td>
-</tr-->
 </template>
 
 <style lang="scss">
