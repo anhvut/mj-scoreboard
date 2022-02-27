@@ -107,7 +107,7 @@ const selectPlayerStyle = computed(() =>
         </tr>
       </thead>
       <tbody class="mdc-data-table__content">
-        <tr>
+        <tr class="mdc-data-table__row">
           <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
             <img alt="east" src="../assets/east.png" />
           </td>
@@ -115,7 +115,7 @@ const selectPlayerStyle = computed(() =>
         <template v-for="(roundPoints, index) in playerPoints.slice(0, 4)" :key="index">
           <ScoreRow :roundPoints="roundPoints" :round-definition="rounds[index]" :players="players" :roundIndex="index" />
         </template>
-        <tr v-if="playerPoints.length >= 4">
+        <tr class="mdc-data-table__row" v-if="playerPoints.length >= 4">
           <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
             <img alt="east" src="../assets/south.png" />
           </td>
@@ -123,7 +123,7 @@ const selectPlayerStyle = computed(() =>
         <template v-for="(roundPoints, index) in playerPoints.slice(4, 8)" :key="index">
           <ScoreRow :roundPoints="roundPoints" :round-definition="rounds[index]" :players="players" :roundIndex="index + 4" />
         </template>
-        <tr v-if="playerPoints.length >= 8">
+        <tr class="mdc-data-table__row" v-if="playerPoints.length >= 8">
           <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
             <img alt="east" src="../assets/west.png" />
           </td>
@@ -131,7 +131,7 @@ const selectPlayerStyle = computed(() =>
         <template v-for="(roundPoints, index) in playerPoints.slice(8, 12)" :key="index">
           <ScoreRow :roundPoints="roundPoints" :round-definition="rounds[index]" :players="players" :roundIndex="index + 8" />
         </template>
-        <tr v-if="playerPoints.length >= 12">
+        <tr class="mdc-data-table__row" v-if="playerPoints.length >= 12">
           <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
             <img alt="east" src="../assets/north.png" />
           </td>
