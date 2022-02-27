@@ -121,7 +121,7 @@ const nameCellClass = computed(() => `mdc-layout-grid__cell--span-${store.getter
       </thead>
       <tbody class="mdc-data-table__content">
         <template v-for="(roundPoints, index) in playerPoints" :key="index">
-          <ScoreRow :roundPoints="roundPoints" :round-definition="rounds[index]" :players="players" :alternate="index % 2 === 1" />
+          <ScoreRow :roundPoints="roundPoints" :round-definition="rounds[index]" :players="players" :roundIndex="index" />
         </template>
       </tbody>
     </table>
