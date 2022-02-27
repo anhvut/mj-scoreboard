@@ -3,7 +3,7 @@ import {t} from '../i18n'
 import {computed, reactive, ref} from 'vue'
 import type {PlayerNumbers, PlayerPoint, Round} from '../types'
 import ScoreRow from './ScoreRow.vue'
-import {getStore} from '../store'
+import {getStore, LayoutNum} from '../store'
 
 const points = ref<string>('')
 const player1 = ref<string>('')
@@ -60,11 +60,19 @@ function addRound() {
 
 const store = getStore()
 const nameCellClass = computed(() => `mdc-layout-grid__cell--span-${store.getters.layoutNum + 1}`)
+const selectPlayerStyle = computed(() =>
+  store.getters.layoutNum === LayoutNum.Mobile
+    ? {
+        // 12 is global side margin, 58 pointInput width, 40 is button width, 8 is margin between 4 components
+        width: `${(store.state.maxWidth - 12 - 12 - 58 - 40 - 8 - 8 - 8) / 2}px`
+      }
+    : {}
+)
 </script>
 
 <template>
   <div class="mdc-typography--headline4">{{ t('app.title') }}</div>
-  <mcw-layout-grid class='inputNameContainer'>
+  <mcw-layout-grid class="inputNameContainer">
     <mcw-layout-cell :class="nameCellClass">
       <mcw-textfield v-model="player1" :label="t('p.Name') + ' ' + t('dir.east')" type="text" autofocus class="inputName" />
     </mcw-layout-cell>
@@ -79,18 +87,18 @@ const nameCellClass = computed(() => `mdc-layout-grid__cell--span-${store.getter
     </mcw-layout-cell>
   </mcw-layout-grid>
 
-  <div v-if="playersDefined" class='inputWinnerContainer'>
-    <mcw-textfield v-model="points" :label="t('r.Points')" type="number" class='inputPoint'/>
-    <mcw-select v-model="winner" :label="t('r.Winner')" class='selectPlayer'>
-      <mcw-list-item data-value="" tabindex="0" style='display: none; height: 0 !important'></mcw-list-item>
+  <div v-if="playersDefined" class="inputWinnerContainer">
+    <mcw-textfield v-model="points" :label="t('r.Points')" type="number" class="inputPoint" />
+    <mcw-select v-model="winner" :label="t('r.Winner')" class="selectPlayer" :style="selectPlayerStyle">
+      <mcw-list-item data-value="" tabindex="0" style="display: none; height: 0 !important"></mcw-list-item>
       <mcw-list-item data-value="0">{{ player1 }}</mcw-list-item>
       <mcw-list-item data-value="1">{{ player2 }}</mcw-list-item>
       <mcw-list-item data-value="2">{{ player3 }}</mcw-list-item>
       <mcw-list-item data-value="3">{{ player4 }}</mcw-list-item>
       <mcw-list-item data-value="4">{{ t('r.draw') }}</mcw-list-item>
     </mcw-select>
-    <mcw-select v-model="giver" :label="t('r.Giver')" class='selectPlayer'>
-      <mcw-list-item data-value="" tabindex="0" style='display: none; height: 0 !important'></mcw-list-item>
+    <mcw-select v-model="giver" :label="t('r.Giver')" class="selectPlayer" :style="selectPlayerStyle">
+      <mcw-list-item data-value="" tabindex="0" style="display: none; height: 0 !important"></mcw-list-item>
       <mcw-list-item data-value="0">{{ player1 }}</mcw-list-item>
       <mcw-list-item data-value="1">{{ player2 }}</mcw-list-item>
       <mcw-list-item data-value="2">{{ player3 }}</mcw-list-item>
@@ -137,7 +145,6 @@ const nameCellClass = computed(() => `mdc-layout-grid__cell--span-${store.getter
 </template>
 
 <style lang="scss">
-
 .inputName {
 }
 
@@ -188,20 +195,17 @@ const nameCellClass = computed(() => `mdc-layout-grid__cell--span-${store.getter
 }
 
 /* deactivate spinner Chrome, Safari, Edge, Opera */
-.inputPoint input::-webkit-outer-spin-button, .inputPoint input::-webkit-inner-spin-button {
+.inputPoint input::-webkit-outer-spin-button,
+.inputPoint input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 /* deactivate spinner Firefox */
-.inputPoint input[type=number] {
+.inputPoint input[type='number'] {
   -moz-appearance: textfield;
 }
 
-.mobile .selectPlayer {
-  width: 128px;
-}
-
-.inputWinnerContainer .mdc-menu > .mdc-list > .mdc-list-item[data-value=""] {
+.inputWinnerContainer .mdc-menu > .mdc-list > .mdc-list-item[data-value=''] {
   display: none;
 }
 </style>
