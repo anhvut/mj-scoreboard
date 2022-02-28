@@ -18,6 +18,7 @@ const giver = ref<string>('')
 
 const selectedIndex = ref<number>(-1)
 const pointInputRef = ref<HTMLInputElement | null>(null)
+const setPointInputRef = (ref: HTMLInputElement | null) => (pointInputRef.value = ref)
 
 const rounds = reactive<Round[]>([])
 const points = computed<PlayerPoint[]>(() => {
@@ -165,8 +166,7 @@ const cellClick = (index: number) => {
   </mcw-data-table>
 
   <div v-if="playersDefined" class="inputWinnerContainer">
-    <!--suppress JSUndeclaredVariable -->
-    <mcw-textfield v-model="pointInput" :label="t('r.Points')" type="number" class="inputPoint" :ref="(el) => (pointInputRef = el)" />
+    <mcw-textfield v-model="pointInput" :label="t('r.Points')" type="number" class="inputPoint" :ref="setPointInputRef" />
     <mcw-select v-model="winner" :label="t('r.Winner')" class="selectPlayer" :style="selectPlayerStyle">
       <mcw-list-item data-value="" tabindex="0" style="display: none; height: 0 !important"></mcw-list-item>
       <mcw-list-item data-value="0">{{ player1 }}</mcw-list-item>
