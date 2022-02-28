@@ -5,7 +5,7 @@ import type {PlayerNumbers, PlayerPoint, Round} from '../types'
 import ScoreRow from './ScoreRow.vue'
 import {getStore, LayoutNum} from '../store'
 
-const points = ref<string>('')
+const pointInput = ref<string>('')
 const player1 = ref<string>('')
 const player2 = ref<string>('')
 const player3 = ref<string>('')
@@ -16,10 +16,11 @@ const playersDefined = computed<boolean>(() => players.value.every((player) => p
 const winner = ref<string>('')
 const giver = ref<string>('')
 
+const selectedIndex = ref<number>(-1)
 const pointInputRef = ref<HTMLInputElement | null>(null)
 
 const rounds = reactive<Round[]>([])
-const playerPoints = computed<PlayerPoint[]>(() => {
+const points = computed<PlayerPoint[]>(() => {
   const result: PlayerPoint[] = []
   const currentPoints: PlayerNumbers = [0, 0, 0, 0]
   for (const round of rounds) {
@@ -45,17 +46,26 @@ const playerPoints = computed<PlayerPoint[]>(() => {
 
 const canAddRound = computed<boolean>(() => {
   return (
-    winner.value === '4' || (parseInt(points.value) >= 8 && winner.value !== '' && giver.value !== '' && winner.value !== giver.value && rounds.length <= 16)
+    winner.value === '4' ||
+    (parseInt(pointInput.value) >= 8 && winner.value !== '' && giver.value !== '' && winner.value !== giver.value && rounds.length <= 16)
   )
 })
 
 function addRound() {
-  rounds.push({
-    points: parseInt(points.value),
-    winner: parseInt(winner.value),
-    giver: parseInt(giver.value)
-  })
-  points.value = ''
+  const winnerValue = parseInt(winner.value)
+  const draw = winnerValue === 4
+  const round: Round = {
+    points: draw ? 0 : parseInt(pointInput.value),
+    winner: winnerValue,
+    giver: draw ? -1 : parseInt(giver.value)
+  }
+  if (selectedIndex.value >= 0) {
+    rounds.splice(selectedIndex.value, 1, round)
+    selectedIndex.value = -1
+  } else {
+    rounds.push(round)
+  }
+  pointInput.value = ''
   winner.value = ''
   giver.value = ''
   if (pointInputRef.value) pointInputRef.value.focus()
@@ -71,6 +81,14 @@ const selectPlayerStyle = computed(() =>
       }
     : {}
 )
+
+const cellClick = (index: number) => {
+  selectedIndex.value = index
+  pointInput.value = rounds[index].points.toString()
+  winner.value = rounds[index].winner.toString()
+  giver.value = rounds[index].giver.toString()
+  if (pointInputRef.value) pointInputRef.value.focus()
+}
 </script>
 
 <template>
@@ -115,32 +133,32 @@ const selectPlayerStyle = computed(() =>
             <img alt="east" src="../assets/east.png" />
           </td>
         </tr>
-        <template v-for="(roundPoints, index) in playerPoints.slice(0, 4)" :key="index">
-          <ScoreRow :roundPoints="roundPoints" :round-definition="rounds[index]" :players="players" :roundIndex="index" />
+        <template v-for="(p, i) in points.slice(0, 4)" :key="i">
+          <ScoreRow :points="p" :round="rounds[i]" :players="players" :index="i" @onclick="cellClick" :selected="i === selectedIndex" />
         </template>
-        <tr class="mdc-data-table__row" v-if="playerPoints.length >= 4">
+        <tr class="mdc-data-table__row" v-if="points.length >= 4">
           <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
             <img alt="east" src="../assets/south.png" />
           </td>
         </tr>
-        <template v-for="(roundPoints, index) in playerPoints.slice(4, 8)" :key="index">
-          <ScoreRow :roundPoints="roundPoints" :round-definition="rounds[index]" :players="players" :roundIndex="index + 4" />
+        <template v-for="(p, i) in points.slice(4, 8)" :key="i + 4">
+          <ScoreRow :points="p" :round="rounds[i + 4]" :players="players" :index="i + 4" @onclick="cellClick" :selected="i + 4 === selectedIndex" />
         </template>
-        <tr class="mdc-data-table__row" v-if="playerPoints.length >= 8">
+        <tr class="mdc-data-table__row" v-if="points.length >= 8">
           <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
             <img alt="east" src="../assets/west.png" />
           </td>
         </tr>
-        <template v-for="(roundPoints, index) in playerPoints.slice(8, 12)" :key="index">
-          <ScoreRow :roundPoints="roundPoints" :round-definition="rounds[index]" :players="players" :roundIndex="index + 8" />
+        <template v-for="(p, i) in points.slice(8, 12)" :key="i + 8">
+          <ScoreRow :points="p" :round="rounds[i + 8]" :players="players" :index="i + 8" @onclick="cellClick" :selected="i + 8 === selectedIndex" />
         </template>
-        <tr class="mdc-data-table__row" v-if="playerPoints.length >= 12">
+        <tr class="mdc-data-table__row" v-if="points.length >= 12">
           <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
             <img alt="east" src="../assets/north.png" />
           </td>
         </tr>
-        <template v-for="(roundPoints, index) in playerPoints.slice(12, 16)" :key="index">
-          <ScoreRow :roundPoints="roundPoints" :round-definition="rounds[index]" :players="players" :roundIndex="index + 12" />
+        <template v-for="(p, i) in points.slice(12, 16)" :key="i + 12">
+          <ScoreRow :points="p" :round="rounds[i + 12]" :players="players" :index="i + 12" @onclick="cellClick" :selected="i + 12 === selectedIndex" />
         </template>
       </tbody>
     </table>
@@ -148,7 +166,7 @@ const selectPlayerStyle = computed(() =>
 
   <div v-if="playersDefined" class="inputWinnerContainer">
     <!--suppress JSUndeclaredVariable -->
-    <mcw-textfield v-model="points" :label="t('r.Points')" type="number" class="inputPoint" :ref="(el) => (pointInputRef = el)" />
+    <mcw-textfield v-model="pointInput" :label="t('r.Points')" type="number" class="inputPoint" :ref="(el) => (pointInputRef = el)" />
     <mcw-select v-model="winner" :label="t('r.Winner')" class="selectPlayer" :style="selectPlayerStyle">
       <mcw-list-item data-value="" tabindex="0" style="display: none; height: 0 !important"></mcw-list-item>
       <mcw-list-item data-value="0">{{ player1 }}</mcw-list-item>
@@ -165,7 +183,7 @@ const selectPlayerStyle = computed(() =>
       <mcw-list-item data-value="3">{{ player4 }}</mcw-list-item>
       <mcw-list-item data-value="4">{{ t('r.self') }}</mcw-list-item>
     </mcw-select>
-    <mcw-fab mini v-if="canAddRound" @click="addRound" icon="add" />
+    <mcw-fab mini v-if="canAddRound" @click="addRound" :icon="selectedIndex >= 0 ? 'save' : 'add'" />
   </div>
 </template>
 

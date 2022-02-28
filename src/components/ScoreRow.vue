@@ -1,59 +1,67 @@
 <script setup lang="ts">
 import {t} from '../i18n'
 import type {PlayerPoint, Round} from '../types'
+import {computed, toRefs} from 'vue'
 
-const {roundPoints, roundDefinition, players, roundIndex} = defineProps<{
-  roundPoints: PlayerPoint
-  roundDefinition: Round
+const props = defineProps<{
+  points: PlayerPoint
+  round: Round
   players: Array<string>
-  roundIndex: number
+  index: number
+  selected: boolean
 }>()
 
-const draw = roundDefinition.winner === 4
-const twoLines = !draw && roundIndex !== 0
-const self = roundDefinition.giver === 4
-const leftLabel: string[] = (() => {
-  switch (roundDefinition.winner) {
+const {points, round, players, index, selected} = toRefs(props)
+
+const emit = defineEmits<{
+  (event: 'onclick', index: number): void
+}>()
+
+const draw = round.value.winner === 4
+const twoLines = computed(() => !draw && index.value !== 0)
+const leftLabel = computed<string[]>(() => {
+  const self = round.value.giver === 4
+  switch (round.value.winner) {
     case 4:
       return [t('r.draw')]
     default:
-      return [roundDefinition.points.toString(10) + ' ' + players[roundDefinition.winner], self ? '' : t('r.on') + ' ' + players[roundDefinition.giver]]
+      return [round.value.points.toString(10) + ' ' + players.value[round.value.winner], self ? '' : t('r.on') + ' ' + players.value[round.value.giver]]
   }
-})()
+})
 
-const trClass = {
+const trClass = computed(() => ({
   'mdc-data-table__row': true,
-  'mdc-data-table__row--selected': roundIndex % 2 === 1
-}
+  'mdc-data-table__row--selected': selected.value
+}))
 </script>
 
 <template>
   <tr :class="trClass">
-    <td class="mdc-data-table__cell">
-      <template v-for="(label, index) in leftLabel" :key="index">
-        <br v-if="index > 0" />
+    <td class="mdc-data-table__cell" v-on:click.stop.prevent="emit('onclick', index)" :style="{cursor: 'pointer'}">
+      <template v-for="(label, i) in leftLabel" :key="i">
+        <br v-if="i > 0" />
         {{ label }}
       </template>
     </td>
     <td class="mdc-data-table__cell mdc-data-table__cell--numeric">
-      {{ twoLines ? roundPoints.diff[0] : '' }}
+      {{ twoLines ? points.diff[0] : '' }}
       <br v-if="twoLines" />
-      {{ roundPoints.points[0] }}
+      {{ points.points[0] }}
     </td>
     <td class="mdc-data-table__cell mdc-data-table__cell--numeric">
-      {{ twoLines ? roundPoints.diff[1] : '' }}
+      {{ twoLines ? points.diff[1] : '' }}
       <br v-if="twoLines" />
-      {{ roundPoints.points[1] }}
+      {{ points.points[1] }}
     </td>
     <td class="mdc-data-table__cell mdc-data-table__cell--numeric">
-      {{ twoLines ? roundPoints.diff[2] : '' }}
+      {{ twoLines ? points.diff[2] : '' }}
       <br v-if="twoLines" />
-      {{ roundPoints.points[2] }}
+      {{ points.points[2] }}
     </td>
     <td class="mdc-data-table__cell mdc-data-table__cell--numeric">
-      {{ twoLines ? roundPoints.diff[3] : '' }}
+      {{ twoLines ? points.diff[3] : '' }}
       <br v-if="twoLines" />
-      {{ roundPoints.points[3] }}
+      {{ points.points[3] }}
     </td>
   </tr>
 </template>
