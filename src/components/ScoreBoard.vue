@@ -113,19 +113,14 @@ const cellClick = (index: number) => {
     <table class="mdc-data-table__table">
       <thead>
         <tr class="mdc-data-table__header-row">
-          <th class="mdc-data-table__header-cell" role="columnheader" scope="col">{{ t('r.Round') }}</th>
-          <th class="mdc-data-table__header-cell mdc-data-table__header-cell--numeric" role="columnheader" scope="col">
-            {{ player1 }}
+          <th class="mdc-data-table__header-cell" role="columnheader" scope="col">
+            <span>{{ t('r.Round') }}</span>
           </th>
-          <th class="mdc-data-table__header-cell mdc-data-table__header-cell--numeric" role="columnheader" scope="col">
-            {{ player2 }}
-          </th>
-          <th class="mdc-data-table__header-cell mdc-data-table__header-cell--numeric" role="columnheader" scope="col">
-            {{ player3 }}
-          </th>
-          <th class="mdc-data-table__header-cell mdc-data-table__header-cell--numeric" role="columnheader" scope="col">
-            {{ player4 }}
-          </th>
+          <template v-for="player in players">
+            <th class="mdc-data-table__header-cell mdc-data-table__header-cell--numeric" role="columnheader" scope="col">
+              <span>{{ player }}</span>
+            </th>
+          </template>
         </tr>
       </thead>
       <tbody class="mdc-data-table__content">
@@ -256,8 +251,23 @@ const cellClick = (index: number) => {
   margin-bottom: 16px;
 }
 
+.pointTableContainer .mdc-data-table__table-container {
+  overflow: visible;
+}
+
+.pointTableContainer table {
+  position: relative;
+}
+
+.pointTableContainer th {
+  position: sticky;
+  top: 0;
+  background: white;
+}
+
 .mobile .pointTableContainer {
   margin-left: var(--mdc-layout-grid-margin-phone);
+  width: 100%;
 }
 
 .tablet .pointTableContainer {
