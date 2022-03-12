@@ -2,7 +2,7 @@ import {createI18n} from 'vue-i18n'
 
 export const messages = {
   en: {
-    'app.title': 'Mahjong scoreboard calculator',
+    'app.title': 'Scoreboard MCR',
     'r.AddRound': 'Add round',
     'r.Points': 'Pts',
     'r.Winner': 'Winner',
@@ -25,7 +25,7 @@ export const messages = {
     'dir.north': 'North'
   },
   fr: {
-    'app.title': 'Calculateur de table de score Mahjong',
+    'app.title': 'Feuille de score MCR',
     'r.AddRound': 'Ajouter manche',
     'r.Points': 'Pts',
     'r.Winner': 'Gagnant',
@@ -53,7 +53,7 @@ const i18n = createI18n({
   legacy: false,
   locale: 'fr',
   fallbackLocale: 'en',
-  messages,
+  messages
 })
 
 export const t = i18n.global.t
