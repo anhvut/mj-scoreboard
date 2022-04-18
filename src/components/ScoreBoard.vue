@@ -20,7 +20,11 @@ const selectedIndex = ref<number>(-1)
 const pointInputRef = ref<HTMLInputElement | null>(null)
 const setPointInputRef = (ref: HTMLInputElement | null) => (pointInputRef.value = ref)
 
+const eastInputRef = ref<HTMLInputElement | null>(null)
+const setEastInputRef = (ref: HTMLInputElement | null) => (eastInputRef.value = ref)
+
 const rounds = reactive<Round[]>([])
+const canInputPoints = computed<boolean>(() => rounds.length < 16)
 const points = computed<PlayerPoint[]>(() => {
   const result: PlayerPoint[] = []
   const currentPoints: PlayerNumbers = [0, 0, 0, 0]
@@ -69,7 +73,7 @@ function addRound() {
   pointInput.value = ''
   winner.value = ''
   giver.value = ''
-  if (pointInputRef.value) pointInputRef.value.focus()
+  pointInputRef.value?.focus()
 }
 
 const store = getStore()
@@ -88,16 +92,30 @@ const cellClick = (index: number) => {
   pointInput.value = rounds[index].points.toString()
   winner.value = rounds[index].winner.toString()
   giver.value = rounds[index].giver.toString()
-  if (pointInputRef.value) pointInputRef.value.focus()
+  pointInputRef.value?.focus()
 }
 const resource = (filename: string) => `img/${filename}`
+
+function newGame() {
+  if (confirm(t('app.newGameConfirm'))) {
+    player1.value = ''
+    player2.value = ''
+    player3.value = ''
+    player4.value = ''
+    rounds.length = 0
+    pointInput.value = ''
+    winner.value = ''
+    giver.value = ''
+    eastInputRef.value?.focus()
+  }
+}
 </script>
 
 <template>
   <div class="mdc-typography--headline4">{{ t('app.title') }}</div>
   <mcw-layout-grid class="inputNameContainer">
     <mcw-layout-cell :class="nameCellClass">
-      <mcw-textfield v-model="player1" :label="t('p.Name') + ' ' + t('dir.east')" type="text" autofocus class="inputName" />
+      <mcw-textfield v-model="player1" :label="t('p.Name') + ' ' + t('dir.east')" type="text" autofocus class="inputName" :ref="setEastInputRef" />
     </mcw-layout-cell>
     <mcw-layout-cell :class="nameCellClass">
       <mcw-textfield v-model="player2" :label="t('p.Name') + ' ' + t('dir.south')" type="text" class="inputName" />
@@ -161,7 +179,7 @@ const resource = (filename: string) => `img/${filename}`
     </table>
   </mcw-data-table>
 
-  <div v-if="playersDefined" class="inputWinnerContainer">
+  <div v-if="canInputPoints" class="inputWinnerContainer">
     <mcw-textfield v-model="pointInput" :label="t('r.Points')" type="number" class="inputPoint" :ref="setPointInputRef" />
     <mcw-select v-model="winner" :label="t('r.Winner')" class="selectPlayer" :style="selectPlayerStyle">
       <mcw-list-item data-value="" tabindex="0" style="display: none; height: 0 !important"></mcw-list-item>
@@ -181,6 +199,7 @@ const resource = (filename: string) => `img/${filename}`
     </mcw-select>
     <mcw-fab mini v-if="canAddRound" @click="addRound" :icon="selectedIndex >= 0 ? 'save' : 'add'" />
   </div>
+  <mcw-button style="padding-top: 8px" @click="newGame">{{ t('app.newGame') }}</mcw-button>
 </template>
 
 <style lang="scss">

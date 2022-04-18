@@ -3,6 +3,8 @@ import {createI18n} from 'vue-i18n'
 export const messages = {
   en: {
     'app.title': 'Scoreboard MCR',
+    'app.newGame': 'New game',
+    'app.newGameConfirm': 'Are you sure you want to restart the game?',
     'r.AddRound': 'Add round',
     'r.Points': 'Pts',
     'r.Winner': 'Winner',
@@ -26,6 +28,8 @@ export const messages = {
   },
   fr: {
     'app.title': 'Feuille de score MCR',
+    'app.newGame': 'Nouvelle partie',
+    'app.newGameConfirm': 'Êtes-vous sûr(e) de vouloir recommencer la partie ?',
     'r.AddRound': 'Ajouter manche',
     'r.Points': 'Pts',
     'r.Winner': 'Gagnant',
