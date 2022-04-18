@@ -90,6 +90,7 @@ const cellClick = (index: number) => {
   giver.value = rounds[index].giver.toString()
   if (pointInputRef.value) pointInputRef.value.focus()
 }
+const resource = (filename: string) => `img/${filename}`
 </script>
 
 <template>
@@ -126,7 +127,7 @@ const cellClick = (index: number) => {
       <tbody class="mdc-data-table__content">
         <tr class="mdc-data-table__row">
           <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
-            <img alt="east" src="../assets/east.png" />
+            <img alt="east" :src="resource('east.png')" />
           </td>
         </tr>
         <template v-for="(p, i) in points.slice(0, 4)" :key="i">
@@ -134,7 +135,7 @@ const cellClick = (index: number) => {
         </template>
         <tr class="mdc-data-table__row" v-if="points.length >= 4">
           <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
-            <img alt="east" src="../assets/south.png" />
+            <img alt="east" :src="resource('south.png')" />
           </td>
         </tr>
         <template v-for="(p, i) in points.slice(4, 8)" :key="i + 4">
@@ -142,7 +143,7 @@ const cellClick = (index: number) => {
         </template>
         <tr class="mdc-data-table__row" v-if="points.length >= 8">
           <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
-            <img alt="east" src="../assets/west.png" />
+            <img alt="east" :src="resource('west.png')" />
           </td>
         </tr>
         <template v-for="(p, i) in points.slice(8, 12)" :key="i + 8">
@@ -150,7 +151,7 @@ const cellClick = (index: number) => {
         </template>
         <tr class="mdc-data-table__row" v-if="points.length >= 12">
           <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
-            <img alt="east" src="../assets/north.png" />
+            <img alt="east" :src="resource('north.png')" />
           </td>
         </tr>
         <template v-for="(p, i) in points.slice(12, 16)" :key="i + 12">

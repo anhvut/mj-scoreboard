@@ -9,7 +9,15 @@ export default defineConfig({
     VitePWA({
       strategies: 'generateSW',
       injectRegister: 'inline',
-      includeAssets: ['./img/icons/favicon.ico', 'robots.txt', './img/icons/apple-touch-icon.png'],
+      includeAssets: [
+        'robots.txt',
+        'img/icons/favicon.ico',
+        'img/icons/apple-touch-icon.png',
+        'img/east.png',
+        'img/north.png',
+        'img/south.png',
+        'img/west.png'
+      ],
       manifest: {
         name: 'Mahjong scoreboard',
         short_name: 'MJ scoreboard',
