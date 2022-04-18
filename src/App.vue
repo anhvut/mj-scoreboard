@@ -10,7 +10,6 @@ const layout = computed(() => store.getters.layout)
 </script>
 
 <template>
-  <!--  <img alt="Vue logo" src="./assets/banner.jpg" style='margin-bottom: 8px'/>-->
   <div :class="layout">
     <ScoreBoard />
   </div>
