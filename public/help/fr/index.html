@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="../../img/icons/favicon.ico" />
+    <meta name="viewport" content="height=device-height,width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <title>Aide en ligne feuille de score MCR</title>
+  </head>
+  <body>
+    <div id="body">
+      <script>
+        fetch('content.html')
+          .then((res) => res.text())
+          .then((html) => (document.querySelector('#body').innerHTML = html))
+      </script>
+    </div>
+  </body>
+</html>

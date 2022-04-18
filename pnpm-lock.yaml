@@ -53,6 +53,7 @@ specifiers:
   patch-package: ^6.4.7
   prettier: ^2.5.1
   sass: ^1.49.8
+  showdown: ~2.0.3
   typescript: ^4.5.4
   vite: ^2.8.0
   vite-plugin-pwa: ^0.11.13
@@ -123,13 +124,13 @@ devDependencies:
   patch-package: 6.4.7
   prettier: 2.5.1
   sass: 1.49.8
+  showdown: 2.0.3
   typescript: 4.5.5
   vite: 2.8.3_sass@1.49.8
   vite-plugin-pwa: 0.11.13_vite@2.8.3
   vue-tsc: 0.29.8_typescript@4.5.5
 
 packages:
-
   /@ampproject/remapping/2.1.2:
     resolution: {integrity: sha512-hoyByceqwKirw7w3Z7gnIIZC3Wx3J484Y3L/cMpXFbr7d9ZQj2mODrirNzcJa+SM3UlpWXYvKV4RlRpFXlWgXg==}
     engines: {node: '>=6.0.0'}
@@ -2391,6 +2392,11 @@ packages:
     resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==}
     dev: true
 
+  /commander/9.2.0:
+    resolution: {integrity: sha512-e2i4wANQiSXgnrBlIatyHtP1odfUp0BbV5Y5nEGbxtIrStkEOAAzCUirvLBNXHLr7kwLvJl6V+4V3XV9x7Wd9w==}
+    engines: {node: ^12.20.0 || >=14}
+    dev: true
+
   /common-tags/1.8.2:
     resolution: {integrity: sha512-gk/Z852D2Wtb//0I+kRFNKKE9dIIVirjoqPoA1wJU+XePVXZfGeBpk45+A1rKO4Q43prqWBNY/MiIeRLbPWUaA==}
     engines: {node: '>=4.0.0'}
@@ -3747,6 +3753,13 @@ packages:
   /shebang-regex/1.0.0:
     resolution: {integrity: sha1-2kL0l0DAtC2yypcoVxyxkMmO/qM=}
     engines: {node: '>=0.10.0'}
+    dev: true
+
+  /showdown/2.0.3:
+    resolution: {integrity: sha512-jHytkv5c5YFTAOYIIaTT1zLL/aC+7C1FiP0CIGQozhHnnFSbor1oYkaNqWFL6CpB3zJNPPSxJrAlsHgzN14knQ==}
+    hasBin: true
+    dependencies:
+      commander: 9.2.0
     dev: true
 
   /side-channel/1.0.4:

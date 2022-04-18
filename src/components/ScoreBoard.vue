@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {t} from '../i18n'
+import i18n, {t} from '../i18n'
 import {computed, reactive, ref} from 'vue'
 import type {PlayerNumbers, PlayerPoint, Round} from '../types'
 import ScoreRow from './ScoreRow.vue'
@@ -109,6 +109,10 @@ function newGame() {
     eastInputRef.value?.focus()
   }
 }
+
+function help() {
+  window.open(`./help/${i18n.global.locale.value}`, '_blank')
+}
 </script>
 
 <template>
@@ -199,7 +203,11 @@ function newGame() {
     </mcw-select>
     <mcw-fab mini v-if="canAddRound" @click="addRound" :icon="selectedIndex >= 0 ? 'save' : 'add'" />
   </div>
-  <mcw-button v-if="playersDefined" style="padding-top: 8px" @click="newGame">{{ t('app.newGame') }}</mcw-button>
+  <div style="display: flex; width: 100%; padding-top: 8px">
+    <mcw-button v-if="playersDefined" @click="newGame">{{ t('app.newGame') }}</mcw-button>
+    <div style="display: flex; flex: 1 1 auto" />
+    <mcw-button @click="help">{{ t('app.help') }}</mcw-button>
+  </div>
 </template>
 
 <style lang="scss">
