@@ -111,7 +111,7 @@ function newGame() {
 }
 
 function help() {
-  window.open(`./help/${i18n.global.locale.value}`, '_blank')
+  window.open(`./help/${i18n.global.locale.value}/index.html`, '_blank')
 }
 </script>
 

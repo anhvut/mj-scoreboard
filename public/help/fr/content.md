@@ -2,7 +2,7 @@
 
 Cette application sert à calculer automatiquement les points d'une partie de Mahjong avec les règles MCR.
 
-Cette application est optimisée pour fonctionner sur mobile afin de noter rapidement des scores.
+Cette application est optimisée pour mobile afin de noter rapidement des scores.
 
 Cette application se limite aux parties :
 
@@ -10,7 +10,7 @@ Cette application se limite aux parties :
 - suivant les règles MCR avec 8 points de minimum
 - sans pénalité
 
-Pour une expérience optimale, il est recommandé d'installer en tant qu'application mobile.
+Pour une expérience optimale, il est recommandé d'installer en tant qu'[application mobile](#installerentantquapplicationmobile).
 
 ## Utilisation de l'application
 
@@ -69,15 +69,27 @@ Cliquer sur le bouton "Nouvelle partie" et valider pour abandonner la partie en 
 
 Il est possible d'installer cette application en tant qu'application mobile à part sur Android, iOS ou même PC.
 
-Ceci est possible grâce à la technologie PWA (Progressive Web Application) disponible sur les navigateurs modernes. Cette installation ne passe pas par Google Store d'Android ou Play Store d'iOS.
+Ceci est possible grâce à la technologie PWA (Progressive Web Application) disponible sur les navigateurs modernes. Cette installation ne passe pas par le Play Store d'Android ou l'App Store d'iOS.
 
-Outre la possibilité de retrouver rapidement l'application, le principal avantage est de pouvoir utiliser l'application en mode hors ligne. Si l'application est démarrée avec une connexion internet disponible et qu'une mise à jour est disponible sur https://anhvut.github.io/mj-scoreboard, l'application est alors automatiquement mise à jour.
+Outre la possibilité de retrouver rapidement l'application, le principal avantage est de pouvoir utiliser l'application en mode hors ligne. Toutefois si l'application est démarrée avec une connexion internet disponible et une mise à jour est disponible de l'application, l'application mobile est alors automatiquement mise à jour.
 
-L'affichage veut varier suivant le modèle de mobile et le navigateur. Le site peut proposer d'installer l'application dans un bandeau ou bien dans le menu contextuel 3 points verticaux.
+L'affichage peut varier suivant le modèle de mobile et le navigateur. Le site peut proposer d'installer l'application dans un bandeau ou bien dans le menu contextuel 3 points verticaux.
 
-![Bandeau installer application](bandeau_install_app.png 'Bandeau installer application')
+Bandeau sur Chrome.
 
-![Menu installer application](menu_install_app.png 'Menu installer application')
+![Bandeau installer application sur Chrome](bandeau_install_app_chrome.png 'Bandeau installer application sur Chrome')
+
+Menu contextuel sur Chrome.
+
+![Menu installer application sur Chrome](menu_install_app_chrome.png 'Menu installer application sur Chrome')
+
+Menu contextuel sur Firefox.
+
+![Menu installer application sur Firefox](menu_install_app_firefox.png 'Menu installer application sur Firefox')
+
+Menu partager sur Safari.
+
+![Menu installer application sur Safari](menu_install_app_safari.png 'Menu installer application sur Safari')
 
 Après validation, l'application est disponible sur l'écran d'accueil du mobile.
 
@@ -85,11 +97,11 @@ Après validation, l'application est disponible sur l'écran d'accueil du mobile
 
 ## Rapport de bug, suggestion d'amélioration
 
-Pour toute remarque sur l'application, veuillez créer une "issue" ou même "pull-request" sur https://github.com/anhvut/mj-scoreboard
+Pour toute remarque sur l'application, veuillez créer une "issue" ou même "pull-request" sur [https://github.com/anhvut/mj-scoreboard](https://github.com/anhvut/mj-scoreboard)
 
 ## Licence
 
-Cette application est sous licence MIT. Cela signifie que vous êtes libre d'étudier le code source, modifier, redistribuer.
+Cette application est sous licence MIT. Cela signifie que vous êtes libre d'utiliser l'application, l'étudier, modifier, redistribuer.
 
-Par contre, vous utilisez l'application telle qu'elle sans garantie. L'auteur ne pourrait être tenu responsable de tout dysfonctionnement.
+Par contre, vous utilisez l'application telle quelle sans garantie. L'auteur ne pourrait être tenu responsable de tout dysfonctionnement.
 L'application n'est pas conçue pour avantager un joueur en particulier !
