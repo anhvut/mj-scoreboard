@@ -24,7 +24,7 @@ const eastInputRef = ref<HTMLInputElement | null>(null)
 const setEastInputRef = (ref: HTMLInputElement | null) => (eastInputRef.value = ref)
 
 const rounds = reactive<Round[]>([])
-const canInputPoints = computed<boolean>(() => rounds.length < 16)
+const canInputPoints = computed<boolean>(() => playersDefined.value && (rounds.length < 16 || selectedIndex.value >= 0))
 const points = computed<PlayerPoint[]>(() => {
   const result: PlayerPoint[] = []
   const currentPoints: PlayerNumbers = [0, 0, 0, 0]
@@ -199,7 +199,7 @@ function newGame() {
     </mcw-select>
     <mcw-fab mini v-if="canAddRound" @click="addRound" :icon="selectedIndex >= 0 ? 'save' : 'add'" />
   </div>
-  <mcw-button style="padding-top: 8px" @click="newGame">{{ t('app.newGame') }}</mcw-button>
+  <mcw-button v-if="playersDefined" style="padding-top: 8px" @click="newGame">{{ t('app.newGame') }}</mcw-button>
 </template>
 
 <style lang="scss">
