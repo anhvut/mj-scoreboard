@@ -1,7 +1,8 @@
 import {createStore, Store, useStore} from 'vuex'
 
 export type StoreState = {
-  maxWidth: number;
+  maxWidth: number
+  maxHeight: number
 }
 
 export enum LayoutNum {
@@ -23,24 +24,25 @@ const layoutNum2Type: Record<LayoutNum, LayoutType> = {
 }
 
 export type StoreGetters = {
-  layoutNum: LayoutNum;
-  layout: LayoutType;
+  layoutNum: LayoutNum
+  layout: LayoutType
 }
 
-export const MUTATION_SET_MAX_WIDTH: string = 'setMaxWidth';
+export const MUTATION_SET_MAX_WIDTH: string = 'setMaxWidth'
+export const MUTATION_SET_MAX_HEIGHT: string = 'setMaxHeight'
 
-export const getStore = (): Store<StoreState> => useStore();
+export const getStore = (): Store<StoreState> => useStore()
 
 const store: Store<StoreState> = createStore<StoreState>({
-  state () {
+  state() {
     return {
       maxWidth: window.innerWidth,
+      maxHeight: window.innerHeight
     }
   },
   mutations: {
-    [MUTATION_SET_MAX_WIDTH]: (state: StoreState, newWidth: number) =>{
-      state.maxWidth = newWidth
-    }
+    [MUTATION_SET_MAX_WIDTH]: (state: StoreState, newWidth: number) => (state.maxWidth = newWidth),
+    [MUTATION_SET_MAX_HEIGHT]: (state: StoreState, newHeight: number) => (state.maxHeight = newHeight)
   },
   getters: {
     layoutNum(state: StoreState): LayoutNum {
