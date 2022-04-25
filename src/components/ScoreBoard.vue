@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import i18n, {t} from '../i18n'
 import {computed, reactive, ref} from 'vue'
-import type {PlayerNumbers, PlayerPoint, Round} from '../types'
+import type {PlayerNames, PlayerNumbers, PlayerPoint, Round} from '../types'
+import ScoreFullScreen from './ScoreFullScreen.vue'
 import ScoreRow from './ScoreRow.vue'
 import {getStore, LayoutNum} from '../store'
 
@@ -10,7 +11,7 @@ const player1 = ref<string>('')
 const player2 = ref<string>('')
 const player3 = ref<string>('')
 const player4 = ref<string>('')
-const players = computed<string[]>(() => [player1.value, player2.value, player3.value, player4.value])
+const players = computed<PlayerNames>(() => [player1.value, player2.value, player3.value, player4.value])
 const playersDefined = computed<boolean>(() => players.value.every((player) => player !== ''))
 
 const winner = ref<string>('')
@@ -110,6 +111,16 @@ function newGame() {
   }
 }
 
+const scoreFullScreen = ref<boolean>(false)
+
+function openScoreFullScreen() {
+  scoreFullScreen.value = true
+}
+
+function closeScoreFullScreen() {
+  scoreFullScreen.value = false
+}
+
 function help() {
   window.open(`./help/${i18n.global.locale.value}/index.html`, '_blank')
 }
@@ -206,8 +217,10 @@ function help() {
   <div style="display: flex; width: 100%; padding-top: 8px">
     <mcw-button v-if="playersDefined" @click="newGame">{{ t('app.newGame') }}</mcw-button>
     <div style="display: flex; flex: 1 1 auto" />
+    <mcw-button @click="openScoreFullScreen" icon="fullscreen" />
     <mcw-button @click="help">{{ t('app.help') }}</mcw-button>
   </div>
+  <ScoreFullScreen v-if="scoreFullScreen" @close="closeScoreFullScreen" :points="points[points.length - 1]?.points ?? [0, 0, 0, 0]" :names="players" />
 </template>
 
 <style lang="scss">

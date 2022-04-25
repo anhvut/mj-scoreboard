@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import {t} from '../i18n'
-import type {PlayerPoint, Round} from '../types'
+import type {PlayerNames, PlayerPoint, Round} from '../types'
 import {computed, toRefs} from 'vue'
 
 const props = defineProps<{
   points: PlayerPoint
   round: Round
-  players: Array<string>
+  players: PlayerNames
   index: number
   selected: boolean
 }>()
 
-const {points, round, players, index, selected} = toRefs(props)
+const {round, players, index, selected} = toRefs(props)
 
 const emit = defineEmits<{
   (event: 'onclick', index: number): void
