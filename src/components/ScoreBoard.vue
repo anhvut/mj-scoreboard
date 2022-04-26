@@ -217,7 +217,7 @@ function help() {
   <div style="display: flex; width: 100%; padding-top: 8px">
     <mcw-button v-if="playersDefined" @click="newGame">{{ t('app.newGame') }}</mcw-button>
     <div style="display: flex; flex: 1 1 auto" />
-    <mcw-button @click="openScoreFullScreen" icon="fullscreen" />
+    <mcw-button @click="openScoreFullScreen" v-if="playersDefined" icon="fullscreen" />
     <mcw-button @click="help" icon="help_outline" />
   </div>
   <ScoreFullScreen v-if="scoreFullScreen" @close="closeScoreFullScreen" :points="points[points.length - 1]?.points ?? [0, 0, 0, 0]" :names="players" />
