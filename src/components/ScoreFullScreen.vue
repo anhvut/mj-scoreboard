@@ -1,37 +1,35 @@
 <script setup lang="ts">
 import {PlayerNames, PlayerNumbers} from '../types'
 import {computed, CSSProperties, ref, toRefs} from 'vue'
-import {getStore} from '../store'
 
 const props = defineProps<{
   points: PlayerNumbers
   names: PlayerNames
 }>()
 
+// noinspection JSUnusedGlobalSymbols
 const {points, names} = toRefs(props)
-
-const store = getStore()
-const {maxWidth, maxHeight} = store.state
 
 const emit = defineEmits<{
   (event: 'close'): void
 }>()
 
-const rotateZ = ref<number>(0)
+const ROTATE_Z_LS_KEY = 'mj-scoreboard.fullscreen.rotateZ'
+const initialRotateZ = computed<number>(() => +(localStorage.getItem(ROTATE_Z_LS_KEY) || '0'))
+const rotateZ = ref<number>(initialRotateZ.value)
 
 function rotateRight() {
   if (rotateZ.value) rotateZ.value -= 90
   else rotateZ.value = 270
+  localStorage.setItem(ROTATE_Z_LS_KEY, rotateZ.value.toString(10))
 }
 
-const fontSize = ref<number>(50)
+const FONT_SIZE_LS_KEY = 'mj-scoreboard.fullscreen.fontSize'
+const initialFontSize = computed<number>(() => +(localStorage.getItem(FONT_SIZE_LS_KEY) || '50'))
+const fontSize = ref<number>(initialFontSize.value)
 
-function inputFontSize(event: any) {
-  fontSize.value = event.target.value
-}
-
-function changeFontSize(event: any) {
-  fontSize.value = event._value
+function focusOut() {
+  localStorage.setItem(FONT_SIZE_LS_KEY, fontSize.value.toString(10))
 }
 
 const showSettings = ref<boolean>(false)
@@ -43,10 +41,6 @@ const dynamicStyle = computed<CSSProperties>(() => ({
   transform: `translateY(-50%) rotateZ(${rotateZ.value}deg)`,
   fontSize: `${fontSize.value}pt`
 }))
-
-function sliderChange(...args: any[]) {
-  console.log('slider change', ...args)
-}
 </script>
 
 <template>
@@ -68,7 +62,7 @@ function sliderChange(...args: any[]) {
       <mcw-button @click="settings" icon="settings" />
       <mcw-button v-if="showSettings" @click="rotateRight" icon="rotate_right" />
       <div v-if="showSettings" class="slider-container">
-        <mcw-slider @change="sliderChange" v-model="fontSize" min="10" max="200" />
+        <mcw-slider @focusout="focusOut" v-model="fontSize" min="10" max="200" />
       </div>
     </div>
   </div>
