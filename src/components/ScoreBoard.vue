@@ -31,7 +31,11 @@ const points = computed<PlayerPoint[]>(() => {
   const currentPoints: PlayerNumbers = [0, 0, 0, 0]
   for (const round of rounds) {
     const currentDiff: PlayerNumbers = [0, 0, 0, 0]
-    if (round.winner !== 4) {
+    if (round.winner >= 5) {
+      // penalty
+      for (let i = 0; i < 4; i++) currentDiff[i] = i === round.giver ? round.points * 3 : -round.points
+    } else if (round.winner !== 4) {
+      // not draw
       if (round.giver !== 4) {
         currentDiff[round.winner] = round.points + 32
         currentDiff[round.giver] = -round.points
@@ -50,9 +54,25 @@ const points = computed<PlayerPoint[]>(() => {
   return result
 })
 
+const w = computed<number[][]>(() => {
+  const result = []
+  let index = 0
+  for (let wind = 0; wind < 4; wind++) {
+    let startIndex = index
+    let nbPlayedRounds = 0
+    while (nbPlayedRounds < 4 && index < rounds.length) {
+      if (rounds[index].points >= 0) nbPlayedRounds++
+      index++
+    }
+    result.push([startIndex, nbPlayedRounds])
+  }
+  return result
+})
+
 const canAddRound = computed<boolean>(() => {
   return (
     winner.value === '4' ||
+    ((winner.value === '5' || winner.value === '6') && giver.value !== '' && giver.value !== '4') ||
     (parseInt(pointInput.value) >= 8 && winner.value !== '' && giver.value !== '' && winner.value !== giver.value && rounds.length <= 16)
   )
 })
@@ -60,8 +80,10 @@ const canAddRound = computed<boolean>(() => {
 function addRound() {
   const winnerValue = parseInt(winner.value)
   const draw = winnerValue === 4
+  const penalty10 = winnerValue === 5
+  const penalty20 = winnerValue === 6
   const round: Round = {
-    points: draw ? 0 : parseInt(pointInput.value),
+    points: draw ? 0 : penalty10 ? -10 : penalty20 ? -20 : parseInt(pointInput.value),
     winner: winnerValue,
     giver: draw ? -1 : parseInt(giver.value)
   }
@@ -163,32 +185,53 @@ function help() {
             <img alt="east" :src="resource('east.png')" />
           </td>
         </tr>
-        <template v-for="(p, i) in points.slice(0, 4)" :key="i">
+        <template v-for="(p, i) in points.slice(w[0][0], w[1][0])" :key="i">
           <ScoreRow :points="p" :round="rounds[i]" :players="players" :index="i" @onclick="cellClick" :selected="i === selectedIndex" />
         </template>
-        <tr class="mdc-data-table__row" v-if="points.length >= 4">
+        <tr class="mdc-data-table__row" v-if="w[0][1] >= 4">
           <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
             <img alt="east" :src="resource('south.png')" />
           </td>
         </tr>
-        <template v-for="(p, i) in points.slice(4, 8)" :key="i + 4">
-          <ScoreRow :points="p" :round="rounds[i + 4]" :players="players" :index="i + 4" @onclick="cellClick" :selected="i + 4 === selectedIndex" />
+        <template v-for="(p, i) in points.slice(w[1][0], w[2][0])" :key="i + w[1][0]">
+          <ScoreRow
+            :points="p"
+            :round="rounds[i + w[1][0]]"
+            :players="players"
+            :index="i + w[1][0]"
+            @onclick="cellClick"
+            :selected="i + w[1][0] === selectedIndex"
+          />
         </template>
-        <tr class="mdc-data-table__row" v-if="points.length >= 8">
+        <tr class="mdc-data-table__row" v-if="w[1][1] >= 4">
           <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
             <img alt="east" :src="resource('west.png')" />
           </td>
         </tr>
-        <template v-for="(p, i) in points.slice(8, 12)" :key="i + 8">
-          <ScoreRow :points="p" :round="rounds[i + 8]" :players="players" :index="i + 8" @onclick="cellClick" :selected="i + 8 === selectedIndex" />
+        <template v-for="(p, i) in points.slice(w[2][0], w[3][0])" :key="i + w[2][0]">
+          <ScoreRow
+            :points="p"
+            :round="rounds[i + w[2][0]]"
+            :players="players"
+            :index="i + w[2][0]"
+            @onclick="cellClick"
+            :selected="i + w[2][0] === selectedIndex"
+          />
         </template>
-        <tr class="mdc-data-table__row" v-if="points.length >= 12">
+        <tr class="mdc-data-table__row" v-if="w[2][1] >= 4">
           <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
             <img alt="east" :src="resource('north.png')" />
           </td>
         </tr>
-        <template v-for="(p, i) in points.slice(12, 16)" :key="i + 12">
-          <ScoreRow :points="p" :round="rounds[i + 12]" :players="players" :index="i + 12" @onclick="cellClick" :selected="i + 12 === selectedIndex" />
+        <template v-for="(p, i) in points.slice(w[3][0])" :key="i + w[3][0]">
+          <ScoreRow
+            :points="p"
+            :round="rounds[i + w[3][0]]"
+            :players="players"
+            :index="i + w[3][0]"
+            @onclick="cellClick"
+            :selected="i + w[3][0] === selectedIndex"
+          />
         </template>
       </tbody>
     </table>
@@ -203,6 +246,8 @@ function help() {
       <mcw-list-item data-value="2">{{ player3 }}</mcw-list-item>
       <mcw-list-item data-value="3">{{ player4 }}</mcw-list-item>
       <mcw-list-item data-value="4">{{ t('r.draw') }}</mcw-list-item>
+      <mcw-list-item data-value="5">{{ t('r.penalty10') }}</mcw-list-item>
+      <mcw-list-item data-value="6">{{ t('r.penalty20') }}</mcw-list-item>
     </mcw-select>
     <mcw-select v-model="giver" :label="t('r.Giver')" class="selectPlayer" :style="selectPlayerStyle">
       <mcw-list-item data-value="" tabindex="0" style="display: none; height: 0 !important"></mcw-list-item>
