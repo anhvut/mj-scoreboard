@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import ScoreBoard from './components/ScoreBoard.vue'
+import {t} from './i18n'
+import releaseId from './releaseId'
 import {getStore, MUTATION_SET_MAX_WIDTH, MUTATION_SET_MAX_HEIGHT} from './store'
 import {computed} from 'vue'
 
@@ -10,6 +12,13 @@ window.addEventListener('resize', () => {
 })
 
 const layout = computed(() => store.getters.layout)
+
+const RELEASE_ID_LS_KEY = 'mj-scoreboard.releaseId'
+const currentReleaseId = localStorage.getItem(RELEASE_ID_LS_KEY)
+if (releaseId !== currentReleaseId) {
+  localStorage.setItem(RELEASE_ID_LS_KEY, releaseId)
+  alert(t('app.update', {releaseId}))
+}
 </script>
 
 <template>
