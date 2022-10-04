@@ -6,13 +6,27 @@ import ScoreFullScreen from './ScoreFullScreen.vue'
 import ScoreRow from './ScoreRow.vue'
 import {getStore, LayoutNum} from '../store'
 
+const PLAYER1_LS_KEY = 'mj-scoreboard.name.1'
+const PLAYER2_LS_KEY = 'mj-scoreboard.name.2'
+const PLAYER3_LS_KEY = 'mj-scoreboard.name.3'
+const PLAYER4_LS_KEY = 'mj-scoreboard.name.4'
+const initialPlayer1 = computed<string>(() => localStorage.getItem(PLAYER1_LS_KEY) ?? '')
+const initialPlayer2 = computed<string>(() => localStorage.getItem(PLAYER2_LS_KEY) ?? '')
+const initialPlayer3 = computed<string>(() => localStorage.getItem(PLAYER3_LS_KEY) ?? '')
+const initialPlayer4 = computed<string>(() => localStorage.getItem(PLAYER4_LS_KEY) ?? '')
+
 const pointInput = ref<string>('')
-const player1 = ref<string>('')
-const player2 = ref<string>('')
-const player3 = ref<string>('')
-const player4 = ref<string>('')
+const player1 = ref<string>(initialPlayer1.value)
+const player2 = ref<string>(initialPlayer2.value)
+const player3 = ref<string>(initialPlayer3.value)
+const player4 = ref<string>(initialPlayer4.value)
 const players = computed<PlayerNames>(() => [player1.value, player2.value, player3.value, player4.value])
 const playersDefined = computed<boolean>(() => players.value.every((player) => player !== ''))
+
+const savePlayer1 = () => localStorage.setItem(PLAYER1_LS_KEY, player1.value)
+const savePlayer2 = () => localStorage.setItem(PLAYER2_LS_KEY, player2.value)
+const savePlayer3 = () => localStorage.setItem(PLAYER3_LS_KEY, player3.value)
+const savePlayer4 = () => localStorage.setItem(PLAYER4_LS_KEY, player4.value)
 
 const winner = ref<string>('')
 const giver = ref<string>('')
@@ -24,7 +38,15 @@ const setPointInputRef = (ref: HTMLInputElement | null) => (pointInputRef.value 
 const eastInputRef = ref<HTMLInputElement | null>(null)
 const setEastInputRef = (ref: HTMLInputElement | null) => (eastInputRef.value = ref)
 
-const rounds = reactive<Round[]>([])
+const ROUNDS_LS_KEY = 'mj-scoreboard.rounds'
+const initialRounds = computed<Round[]>(() => {
+  try {
+    return JSON.parse(localStorage.getItem(ROUNDS_LS_KEY) as string) ?? []
+  } catch {
+    return []
+  }
+})
+const rounds = reactive<Round[]>(initialRounds.value)
 const canInputPoints = computed<boolean>(() => playersDefined.value && (rounds.length < 16 || selectedIndex.value >= 0))
 const points = computed<PlayerPoint[]>(() => {
   const result: PlayerPoint[] = []
@@ -93,6 +115,7 @@ function addRound() {
   } else {
     rounds.push(round)
   }
+  localStorage.setItem(ROUNDS_LS_KEY, JSON.stringify(rounds))
   pointInput.value = ''
   winner.value = ''
   giver.value = ''
@@ -129,6 +152,11 @@ function newGame() {
     pointInput.value = ''
     winner.value = ''
     giver.value = ''
+    savePlayer1()
+    savePlayer2()
+    savePlayer3()
+    savePlayer4()
+    localStorage.setItem(ROUNDS_LS_KEY, JSON.stringify(rounds))
     eastInputRef.value?.focus()
   }
 }
@@ -152,16 +180,24 @@ function help() {
   <div class="mdc-typography--headline4">{{ t('app.title') }}</div>
   <mcw-layout-grid class="inputNameContainer">
     <mcw-layout-cell :class="nameCellClass">
-      <mcw-textfield v-model="player1" :label="t('p.Name') + ' ' + t('dir.east')" type="text" autofocus class="inputName" :ref="setEastInputRef" />
+      <mcw-textfield
+        v-model="player1"
+        :label="t('p.Name') + ' ' + t('dir.east')"
+        type="text"
+        autofocus
+        class="inputName"
+        :ref="setEastInputRef"
+        v-on:focusout="savePlayer1"
+      />
     </mcw-layout-cell>
     <mcw-layout-cell :class="nameCellClass">
-      <mcw-textfield v-model="player2" :label="t('p.Name') + ' ' + t('dir.south')" type="text" class="inputName" />
+      <mcw-textfield v-model="player2" :label="t('p.Name') + ' ' + t('dir.south')" type="text" class="inputName" v-on:focusout="savePlayer2" />
     </mcw-layout-cell>
     <mcw-layout-cell :class="nameCellClass">
-      <mcw-textfield v-model="player3" :label="t('p.Name') + ' ' + t('dir.west')" type="text" class="inputName" />
+      <mcw-textfield v-model="player3" :label="t('p.Name') + ' ' + t('dir.west')" type="text" class="inputName" v-on:focusout="savePlayer3" />
     </mcw-layout-cell>
     <mcw-layout-cell :class="nameCellClass">
-      <mcw-textfield v-model="player4" :label="t('p.Name') + ' ' + t('dir.north')" type="text" class="inputName" />
+      <mcw-textfield v-model="player4" :label="t('p.Name') + ' ' + t('dir.north')" type="text" class="inputName" v-on:focusout="savePlayer4" />
     </mcw-layout-cell>
   </mcw-layout-grid>
 
