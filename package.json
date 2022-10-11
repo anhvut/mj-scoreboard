@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite",
     "deployDist": "cd dist && rm -rf .git &&git init && git config user.name \"Anh-Vu Tran\" && git config user.email \"anhvutran1@gmail.com\" && git branch -m main && git add -A && git commit -m 'deploy' && git push -f git@github-perso:anhvut/mj-scoreboard.git main:gh-pages",
-    "build": "vue-tsc --noEmit && vite build && pnpx showdown makehtml -i public/help/fr/content.md -o dist/help/fr/content.html && sed -i -e s,{{RELEASE_ID}},$(date +%d/%m/%Y),g dist/help/fr/content.* dist/assets/index*.js",
+    "build": "vue-tsc --noEmit && vite build && pnpx showdown makehtml -i public/help/fr/content.md -o dist/help/fr/content.html && sed -i -e s,{{RELEASE}},$(date +%d/%m/%Y),g dist/help/fr/content.* dist/assets/index*.js",
     "preview": "vite preview",
     "postinstall": "bash patch/vue-material-adapter_types_index.d.ts.sh"
   },

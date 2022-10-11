@@ -106,4 +106,4 @@ Cette application est sous licence MIT. Cela signifie que vous êtes libre d'uti
 Par contre, vous utilisez l'application telle quelle sans garantie. L'auteur ne pourrait être tenu responsable de tout dysfonctionnement.
 L'application n'est pas conçue pour avantager un joueur en particulier !
 
-_Révision du {{RELEASE_ID}}_
+_Révision du {{RELEASE}}_
