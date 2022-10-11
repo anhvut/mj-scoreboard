@@ -36,7 +36,7 @@ export const messages = {
     'app.newGame': 'Nouvelle partie',
     'app.newGameConfirm': 'Êtes-vous sûr(e) de vouloir recommencer la partie ?',
     'app.help': 'Aide',
-    'app.update': "L'application a bien été mise à jour à la révision {releaseId}",
+    'app.update': "L'application a bien été mise à jour à la révision du {releaseId}",
     'r.AddRound': 'Ajouter manche',
     'r.Points': 'Pts',
     'r.Winner': 'Gagnant',

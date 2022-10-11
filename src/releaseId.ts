@@ -1,2 +1,2 @@
-const releaseId = 'rev {{RELEASE}}'
+const releaseId = '{{RELEASE}}'
 export default releaseId
