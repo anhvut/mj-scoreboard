@@ -1,2 +1,2 @@
-const releaseId = '2022-10-05'
+const releaseId = '{{RELEASE_ID}}'
 export default releaseId
