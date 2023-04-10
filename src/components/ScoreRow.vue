@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {t} from '../i18n'
-import type {PlayerNames, PlayerPoint, Round} from '../types'
+import {t} from '@/plugins/i18n'
+import type {PlayerNames, PlayerPoint, Round} from '@/types'
 import {computed, toRefs} from 'vue'
 
 const props = defineProps<{
@@ -80,6 +80,7 @@ const tdNumClass = computed(() => ({
   </tr>
 </template>
 
+<!--suppress CssUnusedSymbol -->
 <style>
 .penalty {
   color: red !important;

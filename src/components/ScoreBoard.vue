@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import i18n, {t} from '../i18n'
+import i18n, {t} from '../plugins/i18n'
 import {computed, reactive, ref} from 'vue'
-import type {PlayerNames, PlayerNumbers, PlayerPoint, Round} from '../types'
+import type {PlayerNames, PlayerNumbers, PlayerPoint, Round} from '@/types'
 import ScoreFullScreen from './ScoreFullScreen.vue'
-import ScoreRow from './ScoreRow.vue'
-import {getStore, LayoutNum} from '../store'
+import ScoreRow from '@/components/ScoreRow.vue'
 
 const PLAYER1_LS_KEY = 'mj-scoreboard.name.1'
 const PLAYER2_LS_KEY = 'mj-scoreboard.name.2'
@@ -99,6 +98,28 @@ const canAddRound = computed<boolean>(() => {
   )
 })
 
+const winnerItems = computed<any[]>(() => {
+  return [
+    {value: '0', title: player1.value},
+    {value: '1', title: player2.value},
+    {value: '2', title: player3.value},
+    {value: '3', title: player4.value},
+    {value: '4', title: t('r.draw')},
+    {value: '5', title: t('r.penalty10')},
+    {value: '6', title: t('r.penalty20')}
+  ]
+})
+
+const giverItems = computed<any[]>(() => {
+  return [
+    {value: '0', title: player1.value},
+    {value: '1', title: player2.value},
+    {value: '2', title: player3.value},
+    {value: '3', title: player4.value},
+    {value: '4', title: t('r.self')}
+  ]
+})
+
 function addRound() {
   const winnerValue = parseInt(winner.value)
   const draw = winnerValue === 4
@@ -121,17 +142,6 @@ function addRound() {
   giver.value = ''
   pointInputRef.value?.focus()
 }
-
-const store = getStore()
-const nameCellClass = computed(() => `mdc-layout-grid__cell--span-${store.getters.layoutNum + 1}`)
-const selectPlayerStyle = computed(() =>
-  store.getters.layoutNum === LayoutNum.Mobile
-    ? {
-        // 12 is global side margin, 58 pointInput width, 40 is button width, 8 is margin between 4 components
-        width: `${(store.state.maxWidth - 12 - 12 - 58 - 40 - 8 - 8 - 8) / 2}px`
-      }
-    : {}
-)
 
 const cellClick = (index: number) => {
   selectedIndex.value = index
@@ -172,186 +182,148 @@ function closeScoreFullScreen() {
 }
 
 function help() {
-  window.open(`./help/${i18n.global.locale.value}/index.html`, '_blank')
+  window.open(`./help/${i18n.global.locale['value']}/index.html`, '_blank')
 }
 </script>
 
 <template>
-  <div class="mdc-typography--headline4">{{ t('app.title') }}</div>
-  <mcw-layout-grid class="inputNameContainer">
-    <mcw-layout-cell :class="nameCellClass">
-      <mcw-textfield
-        v-model="player1"
-        :label="t('p.Name') + ' ' + t('dir.east')"
-        type="text"
-        autofocus
-        class="inputName"
-        :ref="setEastInputRef"
-        v-on:focusout="savePlayer1"
-      />
-    </mcw-layout-cell>
-    <mcw-layout-cell :class="nameCellClass">
-      <mcw-textfield v-model="player2" :label="t('p.Name') + ' ' + t('dir.south')" type="text" class="inputName" v-on:focusout="savePlayer2" />
-    </mcw-layout-cell>
-    <mcw-layout-cell :class="nameCellClass">
-      <mcw-textfield v-model="player3" :label="t('p.Name') + ' ' + t('dir.west')" type="text" class="inputName" v-on:focusout="savePlayer3" />
-    </mcw-layout-cell>
-    <mcw-layout-cell :class="nameCellClass">
-      <mcw-textfield v-model="player4" :label="t('p.Name') + ' ' + t('dir.north')" type="text" class="inputName" v-on:focusout="savePlayer4" />
-    </mcw-layout-cell>
-  </mcw-layout-grid>
-
-  <mcw-data-table v-if="playersDefined" class="pointTableContainer">
-    <table class="mdc-data-table__table">
-      <thead>
-        <tr class="mdc-data-table__header-row">
-          <th class="mdc-data-table__header-cell" role="columnheader" scope="col">
-            <span>{{ t('r.Round') }}</span>
+  <div class="text-h4">{{ t('app.title') }}</div>
+  <div class="inputNameContainer">
+    <v-text-field
+      v-model="player1"
+      :label="t('p.Name') + ' ' + t('dir.east')"
+      type="text"
+      autofocus
+      class="inputName"
+      :controlRef="setEastInputRef"
+      v-on:focusout="savePlayer1"
+    />
+    <v-text-field v-model="player2" :label="t('p.Name') + ' ' + t('dir.south')" type="text" class="inputName" v-on:focusout="savePlayer2" />
+    <v-text-field v-model="player3" :label="t('p.Name') + ' ' + t('dir.west')" type="text" class="inputName" v-on:focusout="savePlayer3" />
+    <v-text-field v-model="player4" :label="t('p.Name') + ' ' + t('dir.north')" type="text" class="inputName" v-on:focusout="savePlayer4" />
+  </div>
+  <v-table v-if="playersDefined" :fixed-header="!scoreFullScreen" class="pointTableContainer">
+    <thead>
+      <tr>
+        <th>
+          <span>{{ t('r.Round') }}</span>
+        </th>
+        <template v-for="player in players">
+          <th>
+            <span>{{ player }}</span>
           </th>
-          <template v-for="player in players">
-            <th class="mdc-data-table__header-cell mdc-data-table__header-cell--numeric" role="columnheader" scope="col">
-              <span>{{ player }}</span>
-            </th>
-          </template>
-        </tr>
-      </thead>
-      <tbody class="mdc-data-table__content">
-        <tr class="mdc-data-table__row">
-          <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
-            <img alt="east" :src="resource('east.png')" />
-          </td>
-        </tr>
-        <template v-for="(p, i) in points.slice(w[0][0], w[1][0])" :key="i">
-          <ScoreRow :points="p" :round="rounds[i]" :players="players" :index="i" @onclick="cellClick" :selected="i === selectedIndex" />
         </template>
-        <tr class="mdc-data-table__row" v-if="w[0][1] >= 4">
-          <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
-            <img alt="east" :src="resource('south.png')" />
-          </td>
-        </tr>
-        <template v-for="(p, i) in points.slice(w[1][0], w[2][0])" :key="i + w[1][0]">
-          <ScoreRow
-            :points="p"
-            :round="rounds[i + w[1][0]]"
-            :players="players"
-            :index="i + w[1][0]"
-            @onclick="cellClick"
-            :selected="i + w[1][0] === selectedIndex"
-          />
-        </template>
-        <tr class="mdc-data-table__row" v-if="w[1][1] >= 4">
-          <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
-            <img alt="east" :src="resource('west.png')" />
-          </td>
-        </tr>
-        <template v-for="(p, i) in points.slice(w[2][0], w[3][0])" :key="i + w[2][0]">
-          <ScoreRow
-            :points="p"
-            :round="rounds[i + w[2][0]]"
-            :players="players"
-            :index="i + w[2][0]"
-            @onclick="cellClick"
-            :selected="i + w[2][0] === selectedIndex"
-          />
-        </template>
-        <tr class="mdc-data-table__row" v-if="w[2][1] >= 4">
-          <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
-            <img alt="east" :src="resource('north.png')" />
-          </td>
-        </tr>
-        <template v-for="(p, i) in points.slice(w[3][0])" :key="i + w[3][0]">
-          <ScoreRow
-            :points="p"
-            :round="rounds[i + w[3][0]]"
-            :players="players"
-            :index="i + w[3][0]"
-            @onclick="cellClick"
-            :selected="i + w[3][0] === selectedIndex"
-          />
-        </template>
-      </tbody>
-    </table>
-  </mcw-data-table>
+      </tr>
+    </thead>
+
+    <tbody class="mdc-data-table__content">
+      <tr class="mdc-data-table__row">
+        <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
+          <img alt="east" :src="resource('east.png')" />
+        </td>
+      </tr>
+      <template v-for="(p, i) in points.slice(w[0][0], w[1][0])" :key="i">
+        <ScoreRow :points="p" :round="rounds[i]" :players="players" :index="i" @onclick="cellClick" :selected="i === selectedIndex" />
+      </template>
+      <tr class="mdc-data-table__row" v-if="w[0][1] >= 4">
+        <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
+          <img alt="east" :src="resource('south.png')" />
+        </td>
+      </tr>
+      <template v-for="(p, i) in points.slice(w[1][0], w[2][0])" :key="i + w[1][0]">
+        <ScoreRow
+          :points="p"
+          :round="rounds[i + w[1][0]]"
+          :players="players"
+          :index="i + w[1][0]"
+          @onclick="cellClick"
+          :selected="i + w[1][0] === selectedIndex"
+        />
+      </template>
+      <tr class="mdc-data-table__row" v-if="w[1][1] >= 4">
+        <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
+          <img alt="east" :src="resource('west.png')" />
+        </td>
+      </tr>
+      <template v-for="(p, i) in points.slice(w[2][0], w[3][0])" :key="i + w[2][0]">
+        <ScoreRow
+          :points="p"
+          :round="rounds[i + w[2][0]]"
+          :players="players"
+          :index="i + w[2][0]"
+          @onclick="cellClick"
+          :selected="i + w[2][0] === selectedIndex"
+        />
+      </template>
+      <tr class="mdc-data-table__row" v-if="w[2][1] >= 4">
+        <td class="mdc-data-table__cell" colspan="5" style="text-align: center">
+          <img alt="east" :src="resource('north.png')" />
+        </td>
+      </tr>
+      <template v-for="(p, i) in points.slice(w[3][0])" :key="i + w[3][0]">
+        <ScoreRow
+          :points="p"
+          :round="rounds[i + w[3][0]]"
+          :players="players"
+          :index="i + w[3][0]"
+          @onclick="cellClick"
+          :selected="i + w[3][0] === selectedIndex"
+        />
+      </template>
+    </tbody>
+  </v-table>
 
   <div v-if="canInputPoints" class="inputWinnerContainer">
-    <mcw-textfield v-model="pointInput" :label="t('r.Points')" type="number" class="inputPoint" :ref="setPointInputRef" />
-    <mcw-select v-model="winner" :label="t('r.Winner')" class="selectPlayer" :style="selectPlayerStyle">
-      <mcw-list-item data-value="" tabindex="0" style="display: none; height: 0 !important"></mcw-list-item>
-      <mcw-list-item data-value="0">{{ player1 }}</mcw-list-item>
-      <mcw-list-item data-value="1">{{ player2 }}</mcw-list-item>
-      <mcw-list-item data-value="2">{{ player3 }}</mcw-list-item>
-      <mcw-list-item data-value="3">{{ player4 }}</mcw-list-item>
-      <mcw-list-item data-value="4">{{ t('r.draw') }}</mcw-list-item>
-      <mcw-list-item data-value="5">{{ t('r.penalty10') }}</mcw-list-item>
-      <mcw-list-item data-value="6">{{ t('r.penalty20') }}</mcw-list-item>
-    </mcw-select>
-    <mcw-select v-model="giver" :label="t('r.Giver')" class="selectPlayer" :style="selectPlayerStyle">
-      <mcw-list-item data-value="" tabindex="0" style="display: none; height: 0 !important"></mcw-list-item>
-      <mcw-list-item data-value="0">{{ player1 }}</mcw-list-item>
-      <mcw-list-item data-value="1">{{ player2 }}</mcw-list-item>
-      <mcw-list-item data-value="2">{{ player3 }}</mcw-list-item>
-      <mcw-list-item data-value="3">{{ player4 }}</mcw-list-item>
-      <mcw-list-item data-value="4">{{ t('r.self') }}</mcw-list-item>
-    </mcw-select>
-    <mcw-fab mini v-if="canAddRound" @click="addRound" :icon="selectedIndex >= 0 ? 'save' : 'add'" />
+    <v-text-field v-model="pointInput" :label="t('r.Points')" type="number" class="inputPoint" :controlRef="setPointInputRef" />
+    <v-select v-model="winner" :label="t('r.Winner')" class="selectPlayer" :items="winnerItems" />
+    <v-select v-model="giver" :label="t('r.Giver')" class="selectPlayer" :items="giverItems" />
+    <v-btn v-if="canAddRound" @click="addRound" :icon="selectedIndex >= 0 ? 'mdi-content-save' : 'mdi-plus'" />
+    <div v-if="!canAddRound" class="blank" />
   </div>
-  <div style="display: flex; width: 100%; padding-top: 8px">
-    <mcw-button v-if="playersDefined" @click="newGame">{{ t('app.newGame') }}</mcw-button>
+  <div class="commandContainer">
+    <v-btn v-if="playersDefined" @click="newGame">{{ t('app.newGame') }}</v-btn>
     <div style="display: flex; flex: 1 1 auto" />
-    <mcw-button @click="openScoreFullScreen" v-if="playersDefined" icon="fullscreen" />
-    <mcw-button @click="help" icon="help_outline" />
+    <v-btn @click="openScoreFullScreen" v-if="playersDefined" icon="mdi-fullscreen" />
+    <v-btn @click="help" icon="mdi-help-circle-outline" />
   </div>
   <ScoreFullScreen v-if="scoreFullScreen" @close="closeScoreFullScreen" :points="points[points.length - 1]?.points ?? [0, 0, 0, 0]" :names="players" />
 </template>
 
 <style lang="scss">
 .inputName {
+  flex: 1;
+}
+
+.inputNameContainer > *:not(:last-child) {
+  margin-right: var(--mjs-layout-gutter);
 }
 
 .inputNameContainer {
-  margin-bottom: 16px;
+  margin-top: 16px;
+  display: flex;
 }
 
 .inputWinnerContainer {
-  margin-bottom: 16px;
-  display: block;
+  margin: 16px 0;
+  display: flex;
 }
 
-.mobile .inputWinnerContainer {
-  margin-left: var(--mdc-layout-grid-margin-phone);
+.blank {
+  width: 48px;
+  height: 48px;
 }
 
-.tablet .inputWinnerContainer {
-  margin-left: var(--mdc-layout-grid-margin-tablet);
-}
-
-.desktop .inputWinnerContainer {
-  margin-left: var(--mdc-layout-grid-margin-desktop);
-}
-
-.inputWinnerContainer > * {
-  display: inline-block;
-}
-
-.mobile .inputWinnerContainer > *:not(:last-child) {
-  margin-right: var(--mdc-layout-grid-gutter-phone);
-}
-.tablet .inputWinnerContainer > *:not(:last-child) {
-  margin-right: var(--mdc-layout-grid-gutter-tablet);
-}
-.desktop .inputWinnerContainer > *:not(:last-child) {
-  margin-right: var(--mdc-layout-grid-gutter-desktop);
-}
-
-.inputWinnerContainer .mdc-select > .mdc-select__anchor > .mdc-select__dropdown-icon {
-  width: 0;
-}
-.inputWinnerContainer .mdc-select--filled .mdc-floating-label--float-above {
-  max-width: unset;
+.inputWinnerContainer > *:not(:last-child) {
+  margin-right: var(--mjs-layout-gutter);
 }
 
 .inputPoint {
-  width: 58px;
+  flex: 0;
+  min-width: 58px;
+}
+
+.selectPlayer {
+  flex: 1;
 }
 
 /* deactivate spinner Chrome, Safari, Edge, Opera */
@@ -365,38 +337,15 @@ function help() {
   -moz-appearance: textfield;
 }
 
-.inputWinnerContainer .mdc-menu > .mdc-list > .mdc-list-item[data-value=''] {
-  display: none;
-}
-
 .pointTableContainer {
   margin-bottom: 16px;
 }
 
-.pointTableContainer .mdc-data-table__table-container {
-  overflow: visible;
+.commandContainer {
+  display: flex;
 }
 
-.pointTableContainer table {
-  position: relative;
-}
-
-.pointTableContainer th {
-  position: sticky;
-  top: 0;
-  background: white;
-}
-
-.mobile .pointTableContainer {
-  margin-left: var(--mdc-layout-grid-margin-phone);
-  width: 100%;
-}
-
-.tablet .pointTableContainer {
-  margin-left: var(--mdc-layout-grid-margin-tablet);
-}
-
-.desktop .pointTableContainer {
-  margin-left: var(--mdc-layout-grid-margin-desktop);
+.commandContainer > *:not(:last-child) {
+  margin-right: var(--mjs-layout-gutter);
 }
 </style>

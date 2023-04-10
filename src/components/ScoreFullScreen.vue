@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {PlayerNames, PlayerNumbers} from '../types'
+import {PlayerNames, PlayerNumbers} from '@/types'
 import {computed, CSSProperties, ref, toRefs} from 'vue'
 
 const props = defineProps<{
@@ -7,7 +7,6 @@ const props = defineProps<{
   names: PlayerNames
 }>()
 
-// noinspection JSUnusedGlobalSymbols
 const {points, names} = toRefs(props)
 
 const emit = defineEmits<{
@@ -58,11 +57,11 @@ const dynamicStyle = computed<CSSProperties>(() => ({
       <div class="centered" :style="dynamicStyle">{{ names[3] }}<br />{{ points[3] }}</div>
     </div>
     <div class="controls">
-      <mcw-button @click="emit('close')" icon="fullscreen_exit" />
-      <mcw-button @click="settings" icon="settings" />
-      <mcw-button v-if="showSettings" @click="rotateRight" icon="rotate_right" />
+      <v-btn @click="emit('close')" icon="mdi-fullscreen-exit" />
+      <v-btn @click="settings" icon="mdi-cog" />
+      <v-btn v-if="showSettings" @click="rotateRight" icon="mdi-rotate-right" />
       <div v-if="showSettings" class="slider-container">
-        <mcw-slider @focusout="focusOut" v-model="fontSize" min="10" max="200" />
+        <v-slider @focusout="focusOut" v-model="fontSize" min="10" max="200" />
       </div>
     </div>
   </div>

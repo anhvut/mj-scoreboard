@@ -1,11 +1,18 @@
+// Plugins
 import vue from '@vitejs/plugin-vue'
-import {defineConfig} from 'vite'
+import vuetify, {transformAssetUrls} from 'vite-plugin-vuetify'
 import {VitePWA} from 'vite-plugin-pwa'
+
+// Utilities
+import {defineConfig} from 'vite'
+import {fileURLToPath, URL} from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    vue(),
+    vue({
+      template: {transformAssetUrls}
+    }),
     VitePWA({
       strategies: 'generateSW',
       injectRegister: 'inline',
@@ -38,16 +45,27 @@ export default defineConfig({
           }
         ]
       }
+    }),
+    // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
+    vuetify({
+      autoImport: true
     })
   ],
-  server: {
-    port: 9000
-  },
   base: './',
   define: {
+    'process.env': {},
     __VUE_I18N_FULL_INSTALL__: false,
     __VUE_I18N_LEGACY_API__: false,
     __VUE_I18N_PROD_DEVTOOLS__: false,
     __VUE_OPTIONS_API__: false
+  },
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url))
+    },
+    extensions: ['.js', '.json', '.jsx', '.mjs', '.ts', '.tsx', '.vue']
+  },
+  server: {
+    port: 3000
   }
 })

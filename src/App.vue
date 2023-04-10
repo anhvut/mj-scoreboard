@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import ScoreBoard from './components/ScoreBoard.vue'
-import {t} from './i18n'
-import releaseId from './releaseId'
-import {getStore, MUTATION_SET_MAX_WIDTH, MUTATION_SET_MAX_HEIGHT} from './store'
+import ScoreBoard from '@/components/ScoreBoard.vue'
+import {t} from '@/plugins/i18n'
+import releaseId from '@/releaseId'
+import {getStore, MUTATION_SET_MAX_HEIGHT, MUTATION_SET_MAX_WIDTH} from '@/plugins/store'
 import {computed} from 'vue'
 
 const store = getStore()
@@ -22,11 +22,35 @@ if (releaseId !== currentReleaseId) {
 </script>
 
 <template>
-  <div :class="layout">
-    <ScoreBoard />
-  </div>
+  <v-app>
+    <v-main :class="layout">
+      <ScoreBoard />
+    </v-main>
+  </v-app>
 </template>
 
 <style lang="scss">
-@import './theme.scss';
+main {
+  --v-layout-left: 16px !important;
+  --v-layout-right: 16px !important;
+  --mjs-layout-margin: 16px;
+  --mjs-layout-gutter: 16px;
+  @media all and (max-width: 840px) {
+    --v-layout-left: 16px !important;
+    --v-layout-right: 16px !important;
+    --mjs-layout-margin: 16px;
+    --mjs-layout-gutter: 16px;
+  }
+  @media all and (max-width: 600px) {
+    --v-layout-left: 8px !important;
+    --v-layout-right: 8px !important;
+    --mjs-layout-margin: 8px;
+    --mjs-layout-gutter: 8px;
+  }
+}
+
+#app {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 </style>

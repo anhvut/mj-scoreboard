@@ -1,11 +1,20 @@
-import Vue, {createApp} from 'vue'
-import VueMaterialAdapter from 'vue-material-adapter'
+/**
+ * main.ts
+ *
+ * Bootstraps Vuetify and other plugins then mounts the App`
+ */
+
+// Components
 import App from './App.vue'
-import i18n from "./i18n"
-import store  from './store'
+
+// Composables
+import {createApp} from 'vue'
+
+// Plugins
+import {registerPlugins} from '@/plugins'
 
 const app = createApp(App)
-app.use(i18n)
-app.use(VueMaterialAdapter)
-app.use(store)
+
+registerPlugins(app)
+
 app.mount('#app')
