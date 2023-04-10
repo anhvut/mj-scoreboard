@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import i18n, {t} from '../plugins/i18n'
+import {useTheme} from 'vuetify'
+import i18n, {t} from '@/plugins/i18n'
 import {computed, reactive, ref} from 'vue'
 import type {PlayerNames, PlayerNumbers, PlayerPoint, Round} from '@/types'
 import ScoreFullScreen from './ScoreFullScreen.vue'
@@ -184,6 +185,16 @@ function closeScoreFullScreen() {
 function help() {
   window.open(`./help/${i18n.global.locale['value']}/index.html`, '_blank')
 }
+
+const THEME_LS_KEY = 'mj-scoreboard.theme.dark'
+const theme = useTheme()
+const currentTheme = ref<boolean>(localStorage.getItem(THEME_LS_KEY) === 'true')
+theme.global.name.value = currentTheme.value ? 'dark' : 'light'
+
+function toggleTheme() {
+  theme.global.name.value = currentTheme.value ? 'dark' : 'light'
+  localStorage.setItem(THEME_LS_KEY, currentTheme.value.toString())
+}
 </script>
 
 <template>
@@ -274,15 +285,16 @@ function help() {
   </v-table>
 
   <div v-if="canInputPoints" class="inputWinnerContainer">
-    <v-text-field v-model="pointInput" :label="t('r.Points')" type="number" class="inputPoint" :controlRef="setPointInputRef" />
     <v-select v-model="winner" :label="t('r.Winner')" class="selectPlayer" :items="winnerItems" />
     <v-select v-model="giver" :label="t('r.Giver')" class="selectPlayer" :items="giverItems" />
+    <v-text-field v-model="pointInput" :label="t('r.Points')" type="number" class="inputPoint" :controlRef="setPointInputRef" />
     <v-btn v-if="canAddRound" @click="addRound" :icon="selectedIndex >= 0 ? 'mdi-content-save' : 'mdi-plus'" />
     <div v-if="!canAddRound" class="blank" />
   </div>
   <div class="commandContainer">
     <v-btn v-if="playersDefined" @click="newGame">{{ t('app.newGame') }}</v-btn>
     <div style="display: flex; flex: 1 1 auto" />
+    <v-switch v-model="currentTheme" @change="toggleTheme" :label="t('app.darkMode')" />
     <v-btn @click="openScoreFullScreen" v-if="playersDefined" icon="mdi-fullscreen" />
     <v-btn @click="help" icon="mdi-help-circle-outline" />
   </div>
