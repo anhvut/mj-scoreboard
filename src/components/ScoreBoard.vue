@@ -213,7 +213,7 @@ function toggleTheme() {
     <v-text-field v-model="player3" :label="t('p.Name') + ' ' + t('dir.west')" type="text" class="inputName" v-on:focusout="savePlayer3" />
     <v-text-field v-model="player4" :label="t('p.Name') + ' ' + t('dir.north')" type="text" class="inputName" v-on:focusout="savePlayer4" />
   </div>
-  <v-table v-if="playersDefined" :fixed-header="!scoreFullScreen" class="pointTableContainer">
+  <v-table v-if="playersDefined && !scoreFullScreen" :fixed-header="!scoreFullScreen" class="pointTableContainer">
     <thead>
       <tr>
         <th>
