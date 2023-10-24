@@ -213,7 +213,7 @@ function toggleTheme() {
     <v-text-field v-model="player3" :label="t('p.Name') + ' ' + t('dir.west')" type="text" class="inputName" v-on:focusout="savePlayer3" />
     <v-text-field v-model="player4" :label="t('p.Name') + ' ' + t('dir.north')" type="text" class="inputName" v-on:focusout="savePlayer4" />
   </div>
-  <v-table v-if="playersDefined && !scoreFullScreen" :fixed-header="!scoreFullScreen" class="pointTableContainer">
+  <v-table v-if="playersDefined && !scoreFullScreen" fixed-header class="pointTableContainer">
     <thead>
       <tr>
         <th>
@@ -351,6 +351,11 @@ function toggleTheme() {
 
 .pointTableContainer {
   margin-bottom: 16px;
+}
+
+// fix bug sticky thead
+.v-table__wrapper {
+  overflow: unset !important;
 }
 
 .commandContainer {
