@@ -47,7 +47,7 @@ const initialRounds = computed<Round[]>(() => {
   }
 })
 const rounds = reactive<Round[]>(initialRounds.value)
-const canInputPoints = computed<boolean>(() => playersDefined.value && (rounds.length < 16 || selectedIndex.value >= 0))
+const canInputPoints = computed<boolean>(() => playersDefined.value && (rounds.filter((x) => x.winner < 5).length < 16 || selectedIndex.value >= 0))
 const points = computed<PlayerPoint[]>(() => {
   const result: PlayerPoint[] = []
   const currentPoints: PlayerNumbers = [0, 0, 0, 0]
